@@ -1,11 +1,13 @@
 import './App.css'
-import { Logo } from './logo.svg'
+import { Renderer } from './renderer'
+import { Sidebar } from './sidebar'
 
 function App() {
   return (
-    <div>
-      <Logo />
-    </div>
+    <>
+      <Renderer />
+      <Sidebar />
+    </>
   )
 }
 

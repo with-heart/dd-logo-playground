@@ -1,13 +1,39 @@
+:root {
+  --color-background: oklch(0.1 0 0);
+  --color-space: oklch(0.2 0 0);
+  --space-dividers: 0.8rem;
+  --space-padding: 1rem;
+}
+
 #root {
+  display: grid;
+  grid-template-areas: 'renderer sidebar';
+  grid-template-columns: auto 300px;
+  gap: var(--space-dividers);
+  height: 100vh;
+  padding: var(--space-dividers);
+  background: var(--color-space);
+}
+
+.renderer,
+.sidebar {
+  background-color: var(--color-background);
+  padding: var(--space-padding);
+}
+
+.renderer {
+  grid-area: renderer;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  min-width: 100vw;
+  container: renderer / inline-size;
+}
+
+.sidebar {
+  grid-area: sidebar;
 }
 
 .logo {
-  width: 100%;
-  max-width: 90vmin;
+  width: 75cqmin;
   aspect-ratio: 1;
 }
