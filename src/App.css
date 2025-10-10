@@ -1,0 +1,13 @@
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+.logo {
+  width: 100%;
+  max-width: 90vmin;
+  aspect-ratio: 1;
+}
