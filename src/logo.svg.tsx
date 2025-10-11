@@ -3,10 +3,16 @@ import { useId } from 'react'
 import { usePalette } from './use-palette'
 
 // Helper function to generate hexagon path
-const createHexagonPath = (cx: number, cy: number, radius: number): string => {
+const createHexagonPath = (
+  cx: number,
+  cy: number,
+  radius: number,
+  vertical: boolean = false,
+): string => {
   const points: [number, number][] = []
+  const angleOffset = vertical ? Math.PI / 6 : 0 // 30 degree offset for vertical orientation
   for (let i = 0; i < 6; i++) {
-    const angle = (Math.PI / 3) * i
+    const angle = (Math.PI / 3) * i + angleOffset
     const x = cx + radius * Math.cos(angle)
     const y = cy + radius * Math.sin(angle)
     points.push([x, y])
@@ -26,10 +32,12 @@ const getHexagonPoints = (
   cx: number,
   cy: number,
   radius: number,
+  vertical: boolean = false,
 ): [number, number][] => {
   const points: [number, number][] = []
+  const angleOffset = vertical ? Math.PI / 6 : 0 // 30 degree offset for vertical orientation
   for (let i = 0; i < 6; i++) {
-    const angle = (Math.PI / 3) * i
+    const angle = (Math.PI / 3) * i + angleOffset
     const x = cx + radius * Math.cos(angle)
     const y = cy + radius * Math.sin(angle)
     points.push([x, y])
@@ -42,14 +50,18 @@ const createHexagonWithOutlines = (
   hex: HexagonData,
   radius: number,
   strokeWidth: number,
+  vertical: boolean = false,
 ): JSX.Element => {
-  const points = getHexagonPoints(hex.x, hex.y, radius)
+  const points = getHexagonPoints(hex.x, hex.y, radius, vertical)
   const hexKey = `hex-${hex.x}-${hex.y}`
 
   return (
     <g key={hexKey}>
       {/* Fill hexagon */}
-      <path d={createHexagonPath(hex.x, hex.y, radius)} fill={hex.color} />
+      <path
+        d={createHexagonPath(hex.x, hex.y, radius, vertical)}
+        fill={hex.color}
+      />
 
       {/* Individual side strokes with contextual colors */}
       {points.map((point, i) => {
@@ -159,15 +171,28 @@ const generateHexagonGrid = (
   radius: number,
   hexRadius: number,
   colors: string[],
+  vertical: boolean = false,
 ): HexagonData[] => {
   // First pass: create hexagons with grid positions
   const hexMap = new Map<string, HexagonData>()
 
-  // Calculate hex grid dimensions
-  const hexWidth = hexRadius * 2
-  const hexHeight = hexRadius * Math.sqrt(3)
-  const horizontalSpacing = hexWidth * 0.75
-  const verticalSpacing = hexHeight
+  // Calculate hex grid dimensions based on orientation
+  let horizontalSpacing: number
+  let verticalSpacing: number
+
+  if (vertical) {
+    // For vertical hexagons (pointy top), swap the spacing calculations
+    const hexWidth = hexRadius * Math.sqrt(3)
+    const hexHeight = hexRadius * 2
+    horizontalSpacing = hexWidth
+    verticalSpacing = hexHeight * 0.75
+  } else {
+    // For horizontal hexagons (pointy sides) - original calculation
+    const hexWidth = hexRadius * 2
+    const hexHeight = hexRadius * Math.sqrt(3)
+    horizontalSpacing = hexWidth * 0.75
+    verticalSpacing = hexHeight
+  }
 
   // Generate grid to cover the circular area
   const gridRadius = radius + hexRadius
@@ -176,9 +201,21 @@ const generateHexagonGrid = (
 
   for (let row = -rows; row <= rows; row++) {
     for (let col = -cols; col <= cols; col++) {
-      const x = centerX + col * horizontalSpacing
-      const y =
-        centerY + row * verticalSpacing + (col % 2) * (verticalSpacing / 2)
+      let x: number
+      let y: number
+
+      if (vertical) {
+        // For vertical hexagons, offset rows instead of columns
+        x =
+          centerX +
+          col * horizontalSpacing +
+          (row % 2) * (horizontalSpacing / 2)
+        y = centerY + row * verticalSpacing
+      } else {
+        // For horizontal hexagons - original calculation
+        x = centerX + col * horizontalSpacing
+        y = centerY + row * verticalSpacing + (col % 2) * (verticalSpacing / 2)
+      }
 
       // Only include hexagons that are within or intersect the circle
       const distanceFromCenter = Math.sqrt(
@@ -218,7 +255,7 @@ export const Logo = () => {
   const circleRadius = 16.29
   const hexRadius = 1.2
 
-  const { activePalette, strokeWidth } = usePalette()
+  const { activePalette, strokeWidth, verticalHexagons } = usePalette()
   const clipPathId = useId()
   const hexagons = generateHexagonGrid(
     centerX,
@@ -226,6 +263,7 @@ export const Logo = () => {
     circleRadius,
     hexRadius,
     activePalette.colors,
+    verticalHexagons,
   )
 
   return (
@@ -247,7 +285,12 @@ export const Logo = () => {
       {/** Hexagon grid background */}
       <g clipPath={`url(#${clipPathId})`}>
         {hexagons.map((hex) =>
-          createHexagonWithOutlines(hex, hexRadius, strokeWidth),
+          createHexagonWithOutlines(
+            hex,
+            hexRadius,
+            strokeWidth,
+            verticalHexagons,
+          ),
         )}
       </g>
 

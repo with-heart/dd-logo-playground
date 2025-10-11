@@ -7,6 +7,9 @@ export interface PaletteContextType {
   availablePalettes: ColorPalette[]
   strokeWidth: number
   setStrokeWidth: (width: number) => void
+  // Hexagon orientation
+  verticalHexagons: boolean
+  setVerticalHexagons: (vertical: boolean) => void
   // OKLCH custom palette controls
   oklchLightness: number
   setOklchLightness: (lightness: number) => void

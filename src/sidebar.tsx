@@ -120,6 +120,8 @@ export const Sidebar = () => {
     availablePalettes,
     strokeWidth,
     setStrokeWidth,
+    verticalHexagons,
+    setVerticalHexagons,
     oklchLightness,
     setOklchLightness,
     oklchChroma,
@@ -180,6 +182,21 @@ export const Sidebar = () => {
           <div className="slider-value">
             {strokeWidth === 0 ? 'None' : strokeWidth.toFixed(2)}
           </div>
+        </div>
+      </div>
+
+      <div className="control-section">
+        <h3>Hexagon Orientation</h3>
+        <div className="checkbox-container">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={verticalHexagons}
+              onChange={(e) => setVerticalHexagons(e.target.checked)}
+              className="orientation-checkbox"
+            />
+            Vertical hexagons (pointy top)
+          </label>
         </div>
       </div>
     </div>
