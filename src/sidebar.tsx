@@ -67,8 +67,8 @@ export const Sidebar = () => {
               </span>
               <input
                 type="range"
-                min="0.3"
-                max="0.9"
+                min="0.05"
+                max="0.99"
                 step="0.01"
                 value={oklchLightness}
                 onChange={(e) => setOklchLightness(Number(e.target.value))}
@@ -82,8 +82,8 @@ export const Sidebar = () => {
               </span>
               <input
                 type="range"
-                min="0.05"
-                max="0.3"
+                min="0.01"
+                max="0.45"
                 step="0.01"
                 value={oklchChroma}
                 onChange={(e) => setOklchChroma(Number(e.target.value))}
