@@ -12,6 +12,7 @@ export const PaletteProvider = ({ children }: PaletteProviderProps) => {
   const [activePalette, setActivePalette] = useState<ColorPalette>(
     COLOR_PALETTES[0],
   )
+  const [strokeWidth, setStrokeWidth] = useState<number>(0.05)
 
   return (
     <PaletteContext.Provider
@@ -19,6 +20,8 @@ export const PaletteProvider = ({ children }: PaletteProviderProps) => {
         activePalette,
         setActivePalette,
         availablePalettes: COLOR_PALETTES,
+        strokeWidth,
+        setStrokeWidth,
       }}
     >
       {children}

@@ -1,3 +1,4 @@
+import type { JSX } from 'react'
 import { useId } from 'react'
 import { usePalette } from './use-palette'
 
@@ -20,15 +21,147 @@ const createHexagonPath = (cx: number, cy: number, radius: number): string => {
   )
 }
 
-// Helper function to generate hexagon grid coordinates
+// Generate hexagon points for individual side rendering
+const getHexagonPoints = (
+  cx: number,
+  cy: number,
+  radius: number,
+): [number, number][] => {
+  const points: [number, number][] = []
+  for (let i = 0; i < 6; i++) {
+    const angle = (Math.PI / 3) * i
+    const x = cx + radius * Math.cos(angle)
+    const y = cy + radius * Math.sin(angle)
+    points.push([x, y])
+  }
+  return points
+}
+
+// Create individual side paths with contextual stroke colors
+const createHexagonWithOutlines = (
+  hex: HexagonData,
+  radius: number,
+  strokeWidth: number,
+): JSX.Element => {
+  const points = getHexagonPoints(hex.x, hex.y, radius)
+  const hexKey = `hex-${hex.x}-${hex.y}`
+
+  return (
+    <g key={hexKey}>
+      {/* Fill hexagon */}
+      <path d={createHexagonPath(hex.x, hex.y, radius)} fill={hex.color} />
+
+      {/* Individual side strokes with contextual colors */}
+      {points.map((point, i) => {
+        const nextPoint = points[(i + 1) % 6]
+        const neighborColor = hex.neighbors[i]
+
+        // Calculate stroke color based on current hex and neighbor
+        let strokeColor: string
+        if (neighborColor) {
+          // Blend the current hex color with neighbor color, then darken
+          const blendedColor = blendColors(hex.color, neighborColor, 0.3)
+          strokeColor = darkenColor(blendedColor, 0.4)
+        } else {
+          // No neighbor, just darken the current hex color
+          strokeColor = darkenColor(hex.color, 0.5)
+        }
+
+        return (
+          <path
+            key={`${hexKey}-side-${point[0]}-${point[1]}-${nextPoint[0]}-${nextPoint[1]}`}
+            d={`M ${point[0]} ${point[1]} L ${nextPoint[0]} ${nextPoint[1]}`}
+            stroke={strokeColor}
+            strokeWidth={strokeWidth}
+            fill="none"
+          />
+        )
+      })}
+    </g>
+  )
+}
+
+interface HexagonData {
+  x: number
+  y: number
+  color: string
+  row: number
+  col: number
+  neighbors: string[] // Array of 6 neighbor colors (or empty string if no neighbor)
+}
+
+// Color utility functions
+const hexToRgb = (hex: string): [number, number, number] => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result ?
+      [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16),
+      ]
+    : [0, 0, 0]
+}
+
+const rgbToHex = (r: number, g: number, b: number): string => {
+  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+}
+
+const blendColors = (
+  color1: string,
+  color2: string,
+  ratio: number = 0.5,
+): string => {
+  const [r1, g1, b1] = hexToRgb(color1)
+  const [r2, g2, b2] = hexToRgb(color2)
+
+  const r = Math.round(r1 * (1 - ratio) + r2 * ratio)
+  const g = Math.round(g1 * (1 - ratio) + g2 * ratio)
+  const b = Math.round(b1 * (1 - ratio) + b2 * ratio)
+
+  return rgbToHex(r, g, b)
+}
+
+const darkenColor = (color: string, factor: number = 0.3): string => {
+  const [r, g, b] = hexToRgb(color)
+  return rgbToHex(
+    Math.round(r * (1 - factor)),
+    Math.round(g * (1 - factor)),
+    Math.round(b * (1 - factor)),
+  )
+}
+
+// Get hexagon neighbors in clockwise order starting from top-right
+const getHexagonNeighborOffsets = (col: number): Array<[number, number]> => {
+  const isEvenCol = col % 2 === 0
+  return isEvenCol ?
+      [
+        [0, 1], // top-right
+        [1, 1], // right
+        [1, 0], // bottom-right
+        [0, -1], // bottom-left
+        [-1, 0], // left
+        [-1, 1], // top-left
+      ]
+    : [
+        [1, 0], // top-right
+        [1, -1], // right
+        [0, -1], // bottom-right
+        [0, -2], // bottom-left
+        [-1, -1], // left
+        [-1, 0], // top-left
+      ]
+}
+
+// Helper function to generate hexagon grid with neighbor relationships
 const generateHexagonGrid = (
   centerX: number,
   centerY: number,
   radius: number,
   hexRadius: number,
   colors: string[],
-): Array<{ x: number; y: number; color: string }> => {
-  const hexagons: Array<{ x: number; y: number; color: string }> = []
+): HexagonData[] => {
+  // First pass: create hexagons with grid positions
+  const hexMap = new Map<string, HexagonData>()
 
   // Calculate hex grid dimensions
   const hexWidth = hexRadius * 2
@@ -53,16 +186,30 @@ const generateHexagonGrid = (
       )
       if (distanceFromCenter <= radius + hexRadius) {
         const randomColorIndex = Math.floor(Math.random() * colors.length)
-        hexagons.push({
+        const hex: HexagonData = {
           x,
           y,
           color: colors[randomColorIndex],
-        })
+          row,
+          col,
+          neighbors: [],
+        }
+        hexMap.set(`${row},${col}`, hex)
       }
     }
   }
 
-  return hexagons
+  // Second pass: populate neighbor relationships
+  for (const hex of hexMap.values()) {
+    const neighborOffsets = getHexagonNeighborOffsets(hex.col)
+    hex.neighbors = neighborOffsets.map(([dRow, dCol]) => {
+      const neighborKey = `${hex.row + dRow},${hex.col + dCol}`
+      const neighbor = hexMap.get(neighborKey)
+      return neighbor ? neighbor.color : ''
+    })
+  }
+
+  return Array.from(hexMap.values())
 }
 
 export const Logo = () => {
@@ -71,7 +218,7 @@ export const Logo = () => {
   const circleRadius = 16.29
   const hexRadius = 1.2
 
-  const { activePalette } = usePalette()
+  const { activePalette, strokeWidth } = usePalette()
   const clipPathId = useId()
   const hexagons = generateHexagonGrid(
     centerX,
@@ -99,14 +246,9 @@ export const Logo = () => {
 
       {/** Hexagon grid background */}
       <g clipPath={`url(#${clipPathId})`}>
-        {hexagons.map((hex) => (
-          <path
-            key={`hex-${hex.x}-${hex.y}`}
-            d={createHexagonPath(hex.x, hex.y, hexRadius)}
-            fill={hex.color}
-            opacity="0.8"
-          />
-        ))}
+        {hexagons.map((hex) =>
+          createHexagonWithOutlines(hex, hexRadius, strokeWidth),
+        )}
       </g>
 
       {/** D */}

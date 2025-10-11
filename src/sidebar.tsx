@@ -33,7 +33,13 @@ const PalettePreview = ({
 )
 
 export const Sidebar = () => {
-  const { activePalette, setActivePalette, availablePalettes } = usePalette()
+  const {
+    activePalette,
+    setActivePalette,
+    availablePalettes,
+    strokeWidth,
+    setStrokeWidth,
+  } = usePalette()
 
   return (
     <div className="sidebar">
@@ -47,6 +53,24 @@ export const Sidebar = () => {
             onClick={() => setActivePalette(palette)}
           />
         ))}
+      </div>
+
+      <div className="control-section">
+        <h3>Outline Width</h3>
+        <div className="slider-container">
+          <input
+            type="range"
+            min="0"
+            max="0.15"
+            step="0.01"
+            value={strokeWidth}
+            onChange={(e) => setStrokeWidth(Number(e.target.value))}
+            className="stroke-width-slider"
+          />
+          <div className="slider-value">
+            {strokeWidth === 0 ? 'None' : strokeWidth.toFixed(2)}
+          </div>
+        </div>
       </div>
     </div>
   )

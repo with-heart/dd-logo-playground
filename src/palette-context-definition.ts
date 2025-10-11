@@ -5,6 +5,8 @@ export interface PaletteContextType {
   activePalette: ColorPalette
   setActivePalette: (palette: ColorPalette) => void
   availablePalettes: ColorPalette[]
+  strokeWidth: number
+  setStrokeWidth: (width: number) => void
 }
 
 export const PaletteContext = createContext<PaletteContextType | undefined>(
