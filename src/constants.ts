@@ -57,15 +57,37 @@ export const oklchToHex = (l: number, c: number, h: number): string => {
   return color
 }
 
+export interface OklchRange {
+  min: number
+  max: number
+}
+
 export const generateOklchPalette = (
-  lightness: number,
-  chroma: number,
+  baseLightness: number,
+  baseChroma: number,
+  lightnessVariance: number = 0,
+  chromaVariance: number = 0,
   count: number = 10,
 ): string[] => {
   const colors: string[] = []
   const hueStep = 360 / count
 
   for (let i = 0; i < count; i++) {
+    // Generate random values within the variance range around the base values
+    // For lightness: base - variance to base + variance, clamped to valid range
+    const lightness = Math.min(
+      1,
+      Math.max(
+        0,
+        baseLightness + (Math.random() - 0.5) * 2 * lightnessVariance,
+      ),
+    )
+    // For chroma: base - variance to base + variance, clamped to valid range
+    const chroma = Math.min(
+      0.45,
+      Math.max(0, baseChroma + (Math.random() - 0.5) * 2 * chromaVariance),
+    )
+
     // Add some randomness to hue distribution while maintaining good spread
     const baseHue = i * hueStep
     const randomOffset = (Math.random() - 0.5) * 30 // ±15 degrees

@@ -15,19 +15,34 @@ export const PaletteProvider = ({ children }: PaletteProviderProps) => {
   const [strokeWidth, setStrokeWidth] = useState<number>(0.05)
   const [verticalHexagons, setVerticalHexagons] = useState<boolean>(false)
 
-  // OKLCH palette state
+  // OKLCH palette state with base values + variance
   const [oklchLightness, setOklchLightness] = useState<number>(0.7)
   const [oklchChroma, setOklchChroma] = useState<number>(0.15)
+  const [oklchLightnessVariance, setOklchLightnessVariance] =
+    useState<number>(0.1)
+  const [oklchChromaVariance, setOklchChromaVariance] = useState<number>(0.05)
   const [oklchPaletteVersion, setOklchPaletteVersion] = useState<number>(0)
 
   // Generate OKLCH custom palette
   const customOklchPalette: ColorPalette = useMemo(
     () => ({
       name: 'Custom OKLCH',
-      colors: generateOklchPalette(oklchLightness, oklchChroma, 10),
+      colors: generateOklchPalette(
+        oklchLightness,
+        oklchChroma,
+        oklchLightnessVariance,
+        oklchChromaVariance,
+        10,
+      ),
       isCustom: true,
     }),
-    [oklchLightness, oklchChroma, oklchPaletteVersion], // eslint-disable-line react-hooks/exhaustive-deps
+    [
+      oklchLightness,
+      oklchChroma,
+      oklchLightnessVariance,
+      oklchChromaVariance,
+      oklchPaletteVersion,
+    ], // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // All available palettes including custom OKLCH
@@ -80,6 +95,10 @@ export const PaletteProvider = ({ children }: PaletteProviderProps) => {
         setOklchLightness,
         oklchChroma,
         setOklchChroma,
+        oklchLightnessVariance,
+        setOklchLightnessVariance,
+        oklchChromaVariance,
+        setOklchChromaVariance,
         regenerateOklchPalette,
         regenerateActivePalette,
       }}

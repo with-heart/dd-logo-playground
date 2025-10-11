@@ -14,6 +14,10 @@ export const Sidebar = () => {
     setOklchLightness,
     oklchChroma,
     setOklchChroma,
+    oklchLightnessVariance,
+    setOklchLightnessVariance,
+    oklchChromaVariance,
+    setOklchChromaVariance,
     regenerateActivePalette,
   } = usePalette()
 
@@ -127,6 +131,23 @@ export const Sidebar = () => {
 
             <div className="slider-container">
               <span className="control-label">
+                Lightness Variance: ±{oklchLightnessVariance.toFixed(2)}
+              </span>
+              <input
+                type="range"
+                min="0"
+                max="0.3"
+                step="0.01"
+                value={oklchLightnessVariance}
+                onChange={(e) =>
+                  setOklchLightnessVariance(Number(e.target.value))
+                }
+                className="oklch-slider"
+              />
+            </div>
+
+            <div className="slider-container">
+              <span className="control-label">
                 Chroma: {oklchChroma.toFixed(2)}
               </span>
               <input
@@ -136,6 +157,21 @@ export const Sidebar = () => {
                 step="0.01"
                 value={oklchChroma}
                 onChange={(e) => setOklchChroma(Number(e.target.value))}
+                className="oklch-slider"
+              />
+            </div>
+
+            <div className="slider-container">
+              <span className="control-label">
+                Chroma Variance: ±{oklchChromaVariance.toFixed(2)}
+              </span>
+              <input
+                type="range"
+                min="0"
+                max="0.2"
+                step="0.01"
+                value={oklchChromaVariance}
+                onChange={(e) => setOklchChromaVariance(Number(e.target.value))}
                 className="oklch-slider"
               />
             </div>

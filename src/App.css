@@ -222,6 +222,40 @@
   background: #36cfc9;
 }
 
+.dual-range-container {
+  position: relative;
+  height: 20px;
+  margin: 0.5rem 0;
+}
+
+.dual-range-container .oklch-slider {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.dual-range-container .oklch-slider::-webkit-slider-thumb {
+  pointer-events: all;
+}
+
+.dual-range-container .oklch-slider::-moz-range-thumb {
+  pointer-events: all;
+}
+
+.range-control {
+  margin-bottom: 1rem;
+}
+
+.range-control .control-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4ecdc4;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 .regenerate-button {
   background: rgba(78, 205, 196, 0.2);
   border: 1px solid #4ecdc4;

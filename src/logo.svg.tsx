@@ -176,6 +176,8 @@ const generateHexagonGrid = (
   isCustomOklch: boolean = false,
   oklchLightness?: number,
   oklchChroma?: number,
+  oklchLightnessVariance?: number,
+  oklchChromaVariance?: number,
 ): HexagonData[] => {
   // First pass: create hexagons with grid positions
   const hexMap = new Map<string, HexagonData>()
@@ -231,11 +233,28 @@ const generateHexagonGrid = (
         if (
           isCustomOklch &&
           oklchLightness !== undefined &&
-          oklchChroma !== undefined
+          oklchChroma !== undefined &&
+          oklchLightnessVariance !== undefined &&
+          oklchChromaVariance !== undefined
         ) {
-          // Generate a random hue for each hexagon using the same lightness and chroma
+          // Generate random lightness, chroma, and hue for each hexagon using base ± variance
+          const randomLightness = Math.min(
+            1,
+            Math.max(
+              0,
+              oklchLightness +
+                (Math.random() - 0.5) * 2 * oklchLightnessVariance,
+            ),
+          )
+          const randomChroma = Math.min(
+            0.45,
+            Math.max(
+              0,
+              oklchChroma + (Math.random() - 0.5) * 2 * oklchChromaVariance,
+            ),
+          )
           const randomHue = Math.random() * 360
-          hexColor = oklchToHex(oklchLightness, oklchChroma, randomHue)
+          hexColor = oklchToHex(randomLightness, randomChroma, randomHue)
         } else {
           // Use the traditional palette approach
           const randomColorIndex = Math.floor(Math.random() * colors.length)
@@ -280,6 +299,8 @@ export const Logo = () => {
     verticalHexagons,
     oklchLightness,
     oklchChroma,
+    oklchLightnessVariance,
+    oklchChromaVariance,
   } = usePalette()
   const clipPathId = useId()
 
@@ -296,6 +317,8 @@ export const Logo = () => {
     isCustomOklch,
     oklchLightness,
     oklchChroma,
+    oklchLightnessVariance,
+    oklchChromaVariance,
   )
 
   return (
