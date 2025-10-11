@@ -32,6 +32,8 @@
 
 .sidebar {
   grid-area: sidebar;
+  overflow-y: auto;
+  max-height: calc(100vh - 2 * var(--space-dividers));
 }
 
 .logo {
