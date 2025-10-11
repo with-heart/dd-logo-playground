@@ -3,12 +3,13 @@
   --color-space: oklch(0.2 0 0);
   --space-dividers: 0.8rem;
   --space-padding: 1rem;
+  --columns: 3fr minmax(200px, 1fr);
 }
 
 #root {
   display: grid;
   grid-template-areas: 'renderer sidebar';
-  grid-template-columns: auto 300px;
+  grid-template-columns: var(--columns);
   gap: var(--space-dividers);
   height: 100vh;
   padding: var(--space-dividers);
@@ -36,4 +37,66 @@
 .logo {
   width: 75cqmin;
   aspect-ratio: 1;
+}
+
+/* Palette Switcher Styles */
+.sidebar h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.palette-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.palette-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.palette-preview:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.palette-preview.active {
+  border-color: #4ecdc4;
+  background: rgba(78, 205, 196, 0.1);
+}
+
+.palette-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.color-swatches {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.more-colors {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  margin-left: 4px;
 }
