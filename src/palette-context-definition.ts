@@ -7,6 +7,14 @@ export interface PaletteContextType {
   availablePalettes: ColorPalette[]
   strokeWidth: number
   setStrokeWidth: (width: number) => void
+  // OKLCH custom palette controls
+  oklchLightness: number
+  setOklchLightness: (lightness: number) => void
+  oklchChroma: number
+  setOklchChroma: (chroma: number) => void
+  regenerateOklchPalette: () => void
+  // General palette regeneration
+  regenerateActivePalette: () => void
 }
 
 export const PaletteContext = createContext<PaletteContextType | undefined>(
