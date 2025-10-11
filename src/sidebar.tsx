@@ -34,26 +34,75 @@ export const Sidebar = () => {
           className="palette-select"
         >
           <button type="button">
-            {React.createElement('selectedcontent')}
+            {
+              activePalette.isCustom && activePalette.name === 'Custom OKLCH' ?
+                // Custom preview for OKLCH that updates with slider changes
+                <>
+                  <div className="color-swatches-inline">
+                    <div
+                      className="oklch-gradient-preview"
+                      style={{
+                        background: `linear-gradient(to right,
+                        oklch(${oklchLightness} ${oklchChroma} 0),
+                        oklch(${oklchLightness} ${oklchChroma} 60),
+                        oklch(${oklchLightness} ${oklchChroma} 120),
+                        oklch(${oklchLightness} ${oklchChroma} 180),
+                        oklch(${oklchLightness} ${oklchChroma} 240),
+                        oklch(${oklchLightness} ${oklchChroma} 300))`,
+                      }}
+                    />
+                  </div>
+                  <span className="palette-name-inline">
+                    {activePalette.name}
+                  </span>
+                </>
+                // Use selectedcontent for regular palettes
+              : React.createElement('selectedcontent')
+            }
           </button>
 
           {availablePalettes.map((palette) => (
             <option key={palette.name} value={palette.name}>
-              <div className="color-swatches-inline">
-                {palette.colors.slice(0, 4).map((color, index) => (
-                  <div
-                    key={`${color}-${index}`}
-                    className="color-swatch-inline"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-                {palette.colors.length > 4 && (
-                  <span className="more-colors-inline">
-                    +{palette.colors.length - 4}
-                  </span>
-                )}
-              </div>
-              <span className="palette-name-inline">{palette.name}</span>
+              {
+                palette.isCustom && palette.name === 'Custom OKLCH' ?
+                  // For Custom OKLCH, show a gradient using current lightness and chroma values
+                  <>
+                    <div className="color-swatches-inline">
+                      <div
+                        className="oklch-gradient-preview"
+                        style={{
+                          background: `linear-gradient(to right,
+                          oklch(${oklchLightness} ${oklchChroma} 0),
+                          oklch(${oklchLightness} ${oklchChroma} 60),
+                          oklch(${oklchLightness} ${oklchChroma} 120),
+                          oklch(${oklchLightness} ${oklchChroma} 180),
+                          oklch(${oklchLightness} ${oklchChroma} 240),
+                          oklch(${oklchLightness} ${oklchChroma} 300))`,
+                        }}
+                      />
+                    </div>
+                    <span className="palette-name-inline">{palette.name}</span>
+                  </>
+                  // For regular palettes, show actual color swatches
+                : <>
+                    <div className="color-swatches-inline">
+                      {palette.colors.slice(0, 4).map((color, index) => (
+                        <div
+                          key={`${color}-${index}`}
+                          className="color-swatch-inline"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                      {palette.colors.length > 4 && (
+                        <span className="more-colors-inline">
+                          +{palette.colors.length - 4}
+                        </span>
+                      )}
+                    </div>
+                    <span className="palette-name-inline">{palette.name}</span>
+                  </>
+
+              }
             </option>
           ))}
         </select>

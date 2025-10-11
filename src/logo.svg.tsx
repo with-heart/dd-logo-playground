@@ -1,5 +1,6 @@
 import type { JSX } from 'react'
 import { useId } from 'react'
+import { oklchToHex } from './constants'
 import { usePalette } from './use-palette'
 
 // Helper function to generate hexagon path
@@ -172,6 +173,9 @@ const generateHexagonGrid = (
   hexRadius: number,
   colors: string[],
   vertical: boolean = false,
+  isCustomOklch: boolean = false,
+  oklchLightness?: number,
+  oklchChroma?: number,
 ): HexagonData[] => {
   // First pass: create hexagons with grid positions
   const hexMap = new Map<string, HexagonData>()
@@ -222,11 +226,26 @@ const generateHexagonGrid = (
         (x - centerX) ** 2 + (y - centerY) ** 2,
       )
       if (distanceFromCenter <= radius + hexRadius) {
-        const randomColorIndex = Math.floor(Math.random() * colors.length)
+        let hexColor: string
+
+        if (
+          isCustomOklch &&
+          oklchLightness !== undefined &&
+          oklchChroma !== undefined
+        ) {
+          // Generate a random hue for each hexagon using the same lightness and chroma
+          const randomHue = Math.random() * 360
+          hexColor = oklchToHex(oklchLightness, oklchChroma, randomHue)
+        } else {
+          // Use the traditional palette approach
+          const randomColorIndex = Math.floor(Math.random() * colors.length)
+          hexColor = colors[randomColorIndex]
+        }
+
         const hex: HexagonData = {
           x,
           y,
-          color: colors[randomColorIndex],
+          color: hexColor,
           row,
           col,
           neighbors: [],
@@ -255,8 +274,18 @@ export const Logo = () => {
   const circleRadius = 16.29
   const hexRadius = 1.2
 
-  const { activePalette, strokeWidth, verticalHexagons } = usePalette()
+  const {
+    activePalette,
+    strokeWidth,
+    verticalHexagons,
+    oklchLightness,
+    oklchChroma,
+  } = usePalette()
   const clipPathId = useId()
+
+  const isCustomOklch =
+    activePalette.isCustom && activePalette.name === 'Custom OKLCH'
+
   const hexagons = generateHexagonGrid(
     centerX,
     centerY,
@@ -264,6 +293,9 @@ export const Logo = () => {
     hexRadius,
     activePalette.colors,
     verticalHexagons,
+    isCustomOklch,
+    oklchLightness,
+    oklchChroma,
   )
 
   return (
