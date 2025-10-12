@@ -1,5 +1,6 @@
 import React from 'react'
 import { usePalette } from './use-palette'
+import { NumberSlider } from './NumberSlider'
 
 export const Sidebar = () => {
   const {
@@ -114,67 +115,41 @@ export const Sidebar = () => {
         {/* Show OKLCH controls only when Custom OKLCH palette is selected */}
         {activePalette.isCustom && activePalette.name === 'Custom OKLCH' && (
           <div className="oklch-controls-section">
-            <div className="slider-container">
-              <span className="control-label">
-                Lightness: {oklchLightness.toFixed(2)}
-              </span>
-              <input
-                type="range"
-                min="0.05"
-                max="0.99"
-                step="0.01"
-                value={oklchLightness}
-                onChange={(e) => setOklchLightness(Number(e.target.value))}
-                className="oklch-slider"
-              />
-            </div>
+            <NumberSlider
+              label="Lightness"
+              value={oklchLightness}
+              min={0.05}
+              max={0.99}
+              step={0.01}
+              onChange={setOklchLightness}
+            />
 
-            <div className="slider-container">
-              <span className="control-label">
-                Lightness Variance: ±{oklchLightnessVariance.toFixed(2)}
-              </span>
-              <input
-                type="range"
-                min="0"
-                max="0.3"
-                step="0.01"
-                value={oklchLightnessVariance}
-                onChange={(e) =>
-                  setOklchLightnessVariance(Number(e.target.value))
-                }
-                className="oklch-slider"
-              />
-            </div>
+            <NumberSlider
+              label="Lightness Variance"
+              value={oklchLightnessVariance}
+              min={0}
+              max={0.3}
+              step={0.01}
+              onChange={setOklchLightnessVariance}
+            />
 
-            <div className="slider-container">
-              <span className="control-label">
-                Chroma: {oklchChroma.toFixed(2)}
-              </span>
-              <input
-                type="range"
-                min="0.01"
-                max="0.45"
-                step="0.01"
-                value={oklchChroma}
-                onChange={(e) => setOklchChroma(Number(e.target.value))}
-                className="oklch-slider"
-              />
-            </div>
+            <NumberSlider
+              label="Chroma"
+              value={oklchChroma}
+              min={0.01}
+              max={0.45}
+              step={0.01}
+              onChange={setOklchChroma}
+            />
 
-            <div className="slider-container">
-              <span className="control-label">
-                Chroma Variance: ±{oklchChromaVariance.toFixed(2)}
-              </span>
-              <input
-                type="range"
-                min="0"
-                max="0.2"
-                step="0.01"
-                value={oklchChromaVariance}
-                onChange={(e) => setOklchChromaVariance(Number(e.target.value))}
-                className="oklch-slider"
-              />
-            </div>
+            <NumberSlider
+              label="Chroma Variance"
+              value={oklchChromaVariance}
+              min={0}
+              max={0.2}
+              step={0.01}
+              onChange={setOklchChromaVariance}
+            />
           </div>
         )}
       </div>
@@ -189,20 +164,14 @@ export const Sidebar = () => {
 
       <div className="control-section">
         <h3>Outline Width</h3>
-        <div className="slider-container">
-          <input
-            type="range"
-            min="0"
-            max="0.15"
-            step="0.01"
-            value={strokeWidth}
-            onChange={(e) => setStrokeWidth(Number(e.target.value))}
-            className="stroke-width-slider"
-          />
-          <div className="slider-value">
-            {strokeWidth === 0 ? 'None' : strokeWidth.toFixed(2)}
-          </div>
-        </div>
+        <NumberSlider
+          label="Width"
+          value={strokeWidth}
+          min={0}
+          max={0.15}
+          step={0.01}
+          onChange={setStrokeWidth}
+        />
       </div>
 
       <div className="control-section">
