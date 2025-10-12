@@ -62,7 +62,7 @@ export const Sidebar = () => {
           <button
             type="button"
             onClick={regenerateOklchPalette}
-            className="regenerate-button-main"
+            className="regenerate"
           >
             🎲 Regenerate Colors
           </button>
