@@ -1,6 +1,9 @@
 import { createContext } from 'react'
 
 export interface SettingsContextType {
+  // Pattern selection
+  pattern: 'hexagon'
+  setPattern: (pattern: 'hexagon') => void
   strokeWidth: number
   setStrokeWidth: (width: number) => void
   // Hexagon orientation

@@ -3,6 +3,8 @@ import { useSettings } from './use-settings'
 
 export const Sidebar = () => {
   const {
+    pattern,
+    setPattern,
     strokeWidth,
     setStrokeWidth,
     verticalHexagons,
@@ -66,8 +68,18 @@ export const Sidebar = () => {
       </section>
 
       <section>
-        <h3>Pattern</h3>
+        <h3>Tiling</h3>
         <div className="controls">
+          <div>
+            <label htmlFor="pattern">Pattern</label>
+            <select
+              value={pattern}
+              onChange={(e) => setPattern(e.target.value as 'hexagon')}
+            >
+              <option value="hexagon">Hexagon</option>
+            </select>
+          </div>
+
           <NumberSlider
             label="Outline Width"
             value={strokeWidth}

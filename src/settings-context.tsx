@@ -82,6 +82,8 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   return (
     <SettingsContext.Provider
       value={{
+        pattern,
+        setPattern,
         strokeWidth,
         setStrokeWidth,
         verticalHexagons,
