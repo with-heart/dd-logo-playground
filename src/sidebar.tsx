@@ -1,6 +1,6 @@
 // Sidebar UI for Custom OKLCH controls only
 import { NumberSlider } from './NumberSlider'
-import { usePalette } from './use-palette'
+import { useSettings } from './use-settings'
 
 export const Sidebar = () => {
   const {
@@ -17,7 +17,7 @@ export const Sidebar = () => {
     oklchChromaVariance,
     setOklchChromaVariance,
     regenerateOklchPalette,
-  } = usePalette()
+  } = useSettings()
 
   return (
     <div className="sidebar">

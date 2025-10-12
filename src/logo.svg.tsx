@@ -1,7 +1,7 @@
 import type { JSX } from 'react'
 import { useId } from 'react'
 import { oklchToHex } from './constants'
-import { usePalette } from './use-palette'
+import { useSettings } from './use-settings'
 
 // Helper function to generate hexagon path
 const createHexagonPath = (
@@ -300,7 +300,7 @@ export const Logo = () => {
     oklchChroma,
     oklchLightnessVariance,
     oklchChromaVariance,
-  } = usePalette()
+  } = useSettings()
   const clipPathId = useId()
 
   const hexagons = generateHexagonGrid(

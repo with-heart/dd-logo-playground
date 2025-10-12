@@ -1,14 +1,14 @@
 import './App.css'
-import { PaletteProvider } from './palette-context'
 import { Renderer } from './renderer'
+import { SettingsProvider } from './settings-context'
 import { Sidebar } from './sidebar'
 
 function App() {
   return (
-    <PaletteProvider>
+    <SettingsProvider>
       <Renderer />
       <Sidebar />
-    </PaletteProvider>
+    </SettingsProvider>
   )
 }
 

@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface NumberSliderProps {
   label: string
@@ -47,7 +47,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({
   const handleInputBlur = () => {
     setIsEditing(false)
     const numValue = parseFloat(inputValue)
-    
+
     if (!Number.isNaN(numValue)) {
       // Clamp to min/max bounds
       const clampedValue = Math.min(max, Math.max(min, numValue))
