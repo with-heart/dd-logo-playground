@@ -72,6 +72,17 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({
     <div className={`number-slider ${className}`}>
       <div className="number-slider-header">
         <span className="number-slider-label">{label}</span>
+      </div>
+      <div className="number-slider-controls">
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={handleSliderChange}
+          className="number-slider-range"
+        />
         <input
           type="text"
           value={inputValue}
@@ -82,15 +93,6 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({
           className="number-slider-input"
         />
       </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={handleSliderChange}
-        className="number-slider-range"
-      />
     </div>
   )
 }

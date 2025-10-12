@@ -207,14 +207,14 @@
 
 /* NumberSlider Component Styles */
 .number-slider {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .number-slider-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  justify-content: flex-start;
+  align-items: baseline;
+  margin-bottom: 0.25rem;
 }
 
 .number-slider-label {
@@ -246,7 +246,7 @@
 }
 
 .number-slider-range {
-  width: 100%;
+  width: auto;
   height: 4px;
   border-radius: 2px;
   background: oklch(from var(--accent) l c h / 0.2);
@@ -283,6 +283,21 @@
 
 .number-slider-range::-moz-range-thumb:hover {
   background: var(--accent-hover);
+}
+
+/* New row for slider + input */
+.number-slider-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.number-slider-controls .number-slider-range {
+  flex: 1;
+}
+
+.number-slider-controls .number-slider-input {
+  width: 64px;
 }
 
 .regenerate-button {
