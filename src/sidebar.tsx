@@ -19,10 +19,10 @@ export const Sidebar = () => {
   } = useSettings()
 
   return (
-    <div className="sidebar">
-      <div className="control-section">
+    <aside className="sidebar">
+      <section>
         <h3>Colors</h3>
-        <div className="oklch-controls-section">
+        <div className="controls">
           <NumberSlider
             label="Lightness"
             value={oklchLightness}
@@ -31,7 +31,6 @@ export const Sidebar = () => {
             step={0.01}
             onChange={setOklchLightness}
           />
-
           <NumberSlider
             label="Lightness Variance"
             value={oklchLightnessVariance}
@@ -40,16 +39,14 @@ export const Sidebar = () => {
             step={0.01}
             onChange={setOklchLightnessVariance}
           />
-
           <NumberSlider
             label="Chroma"
             value={oklchChroma}
             min={0.01}
-            max={0.45}
+            max={0.4}
             step={0.01}
             onChange={setOklchChroma}
           />
-
           <NumberSlider
             label="Chroma Variance"
             value={oklchChromaVariance}
@@ -58,42 +55,38 @@ export const Sidebar = () => {
             step={0.01}
             onChange={setOklchChromaVariance}
           />
-          <button
-            type="button"
-            onClick={regenerateOklchPalette}
-            className="regenerate"
-          >
-            🎲 Regenerate Colors
-          </button>
         </div>
-      </div>
+        <button
+          type="button"
+          onClick={regenerateOklchPalette}
+          className="regenerate"
+        >
+          🎲 Regenerate Colors
+        </button>
+      </section>
 
-      <div className="control-section">
-        <h3>Outline Width</h3>
-        <NumberSlider
-          label="Width"
-          value={strokeWidth}
-          min={0}
-          max={0.15}
-          step={0.01}
-          onChange={setStrokeWidth}
-        />
-      </div>
+      <section>
+        <h3>Pattern</h3>
+        <div className="controls">
+          <NumberSlider
+            label="Outline Width"
+            value={strokeWidth}
+            min={0}
+            max={0.15}
+            step={0.01}
+            onChange={setStrokeWidth}
+          />
 
-      <div className="control-section">
-        <h3>Hexagon Orientation</h3>
-        <div className="checkbox-container">
-          <label className="checkbox-label">
+          <label>
             <input
               type="checkbox"
               checked={verticalHexagons}
               onChange={(e) => setVerticalHexagons(e.target.checked)}
-              className="orientation-checkbox"
             />
             Vertical hexagons (pointy top)
           </label>
         </div>
-      </div>
-    </div>
+      </section>
+    </aside>
   )
 }
