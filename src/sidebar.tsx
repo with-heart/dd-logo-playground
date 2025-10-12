@@ -1,5 +1,4 @@
-// Sidebar UI for Custom OKLCH controls only
-import { NumberSlider } from './NumberSlider'
+import { NumberSlider } from './number-slider'
 import { useSettings } from './use-settings'
 
 export const Sidebar = () => {

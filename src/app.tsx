@@ -1,4 +1,4 @@
-import './App.css'
+import './app.css'
 import { Renderer } from './renderer'
 import { SettingsProvider } from './settings-context'
 import { Sidebar } from './sidebar'
