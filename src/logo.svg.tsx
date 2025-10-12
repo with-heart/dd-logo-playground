@@ -294,7 +294,6 @@ export const Logo = () => {
   const hexRadius = 1.2
 
   const {
-    activePalette,
     strokeWidth,
     verticalHexagons,
     oklchLightness,
@@ -304,17 +303,14 @@ export const Logo = () => {
   } = usePalette()
   const clipPathId = useId()
 
-  const isCustomOklch =
-    activePalette.isCustom && activePalette.name === 'Custom OKLCH'
-
   const hexagons = generateHexagonGrid(
     centerX,
     centerY,
     circleRadius,
     hexRadius,
-    activePalette.colors,
+    [],
     verticalHexagons,
-    isCustomOklch,
+    true,
     oklchLightness,
     oklchChroma,
     oklchLightnessVariance,

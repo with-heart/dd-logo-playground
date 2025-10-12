@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react'
-import { useMemo, useState, useEffect } from 'react'
-import type { ColorPalette } from './constants'
-import { COLOR_PALETTES, generateOklchPalette } from './constants'
+import { useEffect, useState } from 'react'
 import { PaletteContext } from './palette-context-definition'
 
 // LocalStorage keys for OKLCH values
@@ -39,26 +37,23 @@ interface PaletteProviderProps {
 }
 
 export const PaletteProvider = ({ children }: PaletteProviderProps) => {
-  const [activePalette, setActivePalette] = useState<ColorPalette>(
-    COLOR_PALETTES[0],
-  )
   const [strokeWidth, setStrokeWidth] = useState<number>(0.05)
   const [verticalHexagons, setVerticalHexagons] = useState<boolean>(false)
 
   // OKLCH palette state with base values + variance (loaded from localStorage)
   const [oklchLightness, setOklchLightness] = useState<number>(() =>
-    getStoredNumber(OKLCH_STORAGE_KEYS.lightness, 0.7)
+    getStoredNumber(OKLCH_STORAGE_KEYS.lightness, 0.7),
   )
   const [oklchChroma, setOklchChroma] = useState<number>(() =>
-    getStoredNumber(OKLCH_STORAGE_KEYS.chroma, 0.15)
+    getStoredNumber(OKLCH_STORAGE_KEYS.chroma, 0.15),
   )
-  const [oklchLightnessVariance, setOklchLightnessVariance] = useState<number>(() =>
-    getStoredNumber(OKLCH_STORAGE_KEYS.lightnessVariance, 0.1)
+  const [oklchLightnessVariance, setOklchLightnessVariance] = useState<number>(
+    () => getStoredNumber(OKLCH_STORAGE_KEYS.lightnessVariance, 0.1),
   )
   const [oklchChromaVariance, setOklchChromaVariance] = useState<number>(() =>
-    getStoredNumber(OKLCH_STORAGE_KEYS.chromaVariance, 0.05)
+    getStoredNumber(OKLCH_STORAGE_KEYS.chromaVariance, 0.05),
   )
-  const [oklchPaletteVersion, setOklchPaletteVersion] = useState<number>(0)
+  const [regenNonce, setRegenNonce] = useState<number>(0)
 
   // Persist OKLCH values to localStorage when they change
   useEffect(() => {
@@ -70,7 +65,10 @@ export const PaletteProvider = ({ children }: PaletteProviderProps) => {
   }, [oklchChroma])
 
   useEffect(() => {
-    setStoredNumber(OKLCH_STORAGE_KEYS.lightnessVariance, oklchLightnessVariance)
+    setStoredNumber(
+      OKLCH_STORAGE_KEYS.lightnessVariance,
+      oklchLightnessVariance,
+    )
   }, [oklchLightnessVariance])
 
   useEffect(() => {
@@ -78,69 +76,18 @@ export const PaletteProvider = ({ children }: PaletteProviderProps) => {
   }, [oklchChromaVariance])
 
   // Generate OKLCH custom palette
-  const customOklchPalette: ColorPalette = useMemo(
-    () => ({
-      name: 'Custom OKLCH',
-      colors: generateOklchPalette(
-        oklchLightness,
-        oklchChroma,
-        oklchLightnessVariance,
-        oklchChromaVariance,
-        10,
-      ),
-      isCustom: true,
-    }),
-    [
-      oklchLightness,
-      oklchChroma,
-      oklchLightnessVariance,
-      oklchChromaVariance,
-      oklchPaletteVersion,
-    ],
-  )
+  // Bump version to trigger a rerender and re-generate random hues in consumers
 
   // All available palettes including custom OKLCH
-  const allPalettes = useMemo(
-    () => [...COLOR_PALETTES, customOklchPalette],
-    [customOklchPalette],
-  )
+  // No other palettes; everything is driven by Custom OKLCH now
 
   const regenerateOklchPalette = () => {
-    setOklchPaletteVersion((prev) => prev + 1)
+    setRegenNonce((prev) => prev + 1)
   }
-
-  const regenerateActivePalette = () => {
-    if (activePalette.isCustom && activePalette.name === 'Custom OKLCH') {
-      // For OKLCH palette, just regenerate the hues
-      regenerateOklchPalette()
-    } else {
-      // For other palettes, create a new randomized version
-      // We'll modify the palette colors by slightly shifting hues or randomizing order
-      const newColors = [...activePalette.colors].sort(
-        () => Math.random() - 0.5,
-      )
-      const shuffledPalette: ColorPalette = {
-        ...activePalette,
-        colors: newColors,
-      }
-      setActivePalette(shuffledPalette)
-    }
-  }
-
-  // Update active palette if it's the custom OKLCH palette and parameters changed
-  const effectiveActivePalette = useMemo(() => {
-    if (activePalette.isCustom && activePalette.name === 'Custom OKLCH') {
-      return customOklchPalette
-    }
-    return activePalette
-  }, [activePalette, customOklchPalette])
 
   return (
     <PaletteContext.Provider
       value={{
-        activePalette: effectiveActivePalette,
-        setActivePalette,
-        availablePalettes: allPalettes,
         strokeWidth,
         setStrokeWidth,
         verticalHexagons,
@@ -154,7 +101,7 @@ export const PaletteProvider = ({ children }: PaletteProviderProps) => {
         oklchChromaVariance,
         setOklchChromaVariance,
         regenerateOklchPalette,
-        regenerateActivePalette,
+        regenNonce,
       }}
     >
       {children}
