@@ -37,18 +37,19 @@ interface SettingsProviderProps {
 }
 
 export const SettingsProvider = ({ children }: SettingsProviderProps) => {
+  const [pattern, setPattern] = useState<'hexagon'>('hexagon')
   const [strokeWidth, setStrokeWidth] = useState<number>(0.05)
-  const [verticalHexagons, setVerticalHexagons] = useState<boolean>(false)
+  const [verticalHexagons, setVerticalHexagons] = useState<boolean>(true)
 
   // OKLCH color state with base values + variance (loaded from localStorage)
   const [oklchLightness, setOklchLightness] = useState<number>(() =>
-    getStoredNumber(OKLCH_STORAGE_KEYS.lightness, 0.7),
+    getStoredNumber(OKLCH_STORAGE_KEYS.lightness, 0.9),
   )
   const [oklchChroma, setOklchChroma] = useState<number>(() =>
-    getStoredNumber(OKLCH_STORAGE_KEYS.chroma, 0.15),
+    getStoredNumber(OKLCH_STORAGE_KEYS.chroma, 0.3),
   )
   const [oklchLightnessVariance, setOklchLightnessVariance] = useState<number>(
-    () => getStoredNumber(OKLCH_STORAGE_KEYS.lightnessVariance, 0.1),
+    () => getStoredNumber(OKLCH_STORAGE_KEYS.lightnessVariance, 0.05),
   )
   const [oklchChromaVariance, setOklchChromaVariance] = useState<number>(() =>
     getStoredNumber(OKLCH_STORAGE_KEYS.chromaVariance, 0.05),
