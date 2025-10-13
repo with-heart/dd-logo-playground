@@ -1,3 +1,5 @@
+// @ts-expect-error no types for a font package. the horror 😱
+import '@fontsource/vt323'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './app'

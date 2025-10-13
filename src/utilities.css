@@ -21,3 +21,11 @@
 .flex-col {
   flex-direction: column;
 }
+
+.text-center {
+  text-align: center;
+}
+
+.font-pixel {
+  font-family: 'VT323', monospace;
+}

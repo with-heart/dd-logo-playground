@@ -26,12 +26,32 @@ h3 {
 
 #root {
   display: grid;
-  grid-template-areas: 'renderer sidebar';
+  grid-template-areas:
+    'header header'
+    'renderer sidebar'
+    'footer footer';
   grid-template-columns: var(--columns);
+  grid-template-rows: auto 1fr auto;
   gap: var(--spacing-3);
   height: 100vh;
   padding: var(--spacing-4);
   background: var(--color-space);
+}
+
+.header {
+  grid-area: header;
+  font-weight: 600;
+}
+
+.footer {
+  grid-area: footer;
+  font-size: 1.5rem;
+}
+
+.header,
+.footer {
+  background-color: var(--color-background);
+  padding: var(--spacing-2) var(--spacing-4);
 }
 
 .renderer,
