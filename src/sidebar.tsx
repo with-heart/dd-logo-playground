@@ -36,6 +36,7 @@ export const Sidebar = () => {
     chromaVariance,
     setChromaVariance,
     regenerateImage,
+    randomizeColors,
   } = useSettings()
 
   return (
@@ -76,6 +77,9 @@ export const Sidebar = () => {
             onChange={setChromaVariance}
           />
         </div>
+        <button type="button" onClick={randomizeColors}>
+          🎲 Randomize Colors
+        </button>
         <button type="button" onClick={regenerateImage} className="regenerate">
           🔄 Regenerate Image
         </button>

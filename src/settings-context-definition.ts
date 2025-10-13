@@ -17,6 +17,7 @@ export interface SettingsContextType {
   chromaVariance: number
   setChromaVariance: (variance: number) => void
   regenerateImage: () => void
+  randomizeColors: () => void
   regenNonce: number
 }
 
