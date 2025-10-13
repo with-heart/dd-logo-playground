@@ -26,7 +26,7 @@ export const NumberSlider = ({
   return (
     <div className={`number-slider ${className}`}>
       <label htmlFor={id}>{label}</label>
-      <div className="controls">
+      <div>
         <input
           type="range"
           id={id}
