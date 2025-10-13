@@ -6,19 +6,17 @@ export interface SettingsContextType {
   setPattern: (pattern: 'hexagon') => void
   strokeWidth: number
   setStrokeWidth: (width: number) => void
-  // Hexagon orientation
   verticalHexagons: boolean
   setVerticalHexagons: (vertical: boolean) => void
-  // OKLCH custom color controls with base values + variance
-  oklchLightness: number
-  setOklchLightness: (lightness: number) => void
-  oklchChroma: number
-  setOklchChroma: (chroma: number) => void
-  oklchLightnessVariance: number
-  setOklchLightnessVariance: (variance: number) => void
-  oklchChromaVariance: number
-  setOklchChromaVariance: (variance: number) => void
-  regenerateOklchPalette: () => void
+  lightness: number
+  setLightness: (lightness: number) => void
+  chroma: number
+  setChroma: (chroma: number) => void
+  lightnessVariance: number
+  setLightnessVariance: (variance: number) => void
+  chromaVariance: number
+  setChromaVariance: (variance: number) => void
+  regenerateImage: () => void
   regenNonce: number
 }
 

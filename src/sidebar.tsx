@@ -24,15 +24,15 @@ export const Sidebar = () => {
     setStrokeWidth,
     verticalHexagons,
     setVerticalHexagons,
-    oklchLightness,
-    setOklchLightness,
-    oklchChroma,
-    setOklchChroma,
-    oklchLightnessVariance,
-    setOklchLightnessVariance,
-    oklchChromaVariance,
-    setOklchChromaVariance,
-    regenerateOklchPalette,
+    lightness,
+    setLightness,
+    chroma,
+    setChroma,
+    lightnessVariance,
+    setLightnessVariance,
+    chromaVariance,
+    setChromaVariance,
+    regenerateImage,
   } = useSettings()
 
   return (
@@ -42,43 +42,39 @@ export const Sidebar = () => {
         <div className="controls">
           <NumberSlider
             label="Lightness"
-            value={oklchLightness}
+            value={lightness}
             min={LIGHTNESS_MIN}
             max={LIGHTNESS_MAX}
             step={LIGHTNESS_STEP}
-            onChange={setOklchLightness}
+            onChange={setLightness}
           />
           <NumberSlider
             label="Lightness Variance"
-            value={oklchLightnessVariance}
+            value={lightnessVariance}
             min={LIGHTNESS_VARIANCE_MIN}
             max={LIGHTNESS_VARIANCE_MAX}
             step={LIGHTNESS_STEP}
-            onChange={setOklchLightnessVariance}
+            onChange={setLightnessVariance}
           />
           <NumberSlider
             label="Chroma"
-            value={oklchChroma}
+            value={chroma}
             min={CHROMA_MIN}
             max={CHROMA_MAX}
             step={CHROMA_STEP}
-            onChange={setOklchChroma}
+            onChange={setChroma}
           />
           <NumberSlider
             label="Chroma Variance"
-            value={oklchChromaVariance}
+            value={chromaVariance}
             min={CHROMA_VARIANCE_MIN}
             max={CHROMA_VARIANCE_MAX}
             step={CHROMA_STEP}
-            onChange={setOklchChromaVariance}
+            onChange={setChromaVariance}
           />
         </div>
-        <button
-          type="button"
-          onClick={regenerateOklchPalette}
-          className="regenerate"
-        >
-          🎲 Regenerate Colors
+        <button type="button" onClick={regenerateImage} className="regenerate">
+          🔄 Regenerate Image
         </button>
       </section>
 

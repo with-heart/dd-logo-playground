@@ -347,10 +347,10 @@ export const Logo = () => {
   const {
     strokeWidth,
     verticalHexagons,
-    oklchLightness,
-    oklchChroma,
-    oklchLightnessVariance,
-    oklchChromaVariance,
+    lightness,
+    chroma,
+    lightnessVariance,
+    chromaVariance,
   } = useSettings()
   const clipPathId = useId()
 
@@ -362,10 +362,10 @@ export const Logo = () => {
     [],
     verticalHexagons,
     true,
-    oklchLightness,
-    oklchChroma,
-    oklchLightnessVariance,
-    oklchChromaVariance,
+    lightness,
+    chroma,
+    lightnessVariance,
+    chromaVariance,
   )
 
   return (

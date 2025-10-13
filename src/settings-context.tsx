@@ -42,41 +42,37 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   const [verticalHexagons, setVerticalHexagons] = useState<boolean>(true)
 
   // OKLCH color state with base values + variance (loaded from localStorage)
-  const [oklchLightness, setOklchLightness] = useState<number>(() =>
+  const [lightness, setLightness] = useState<number>(() =>
     getStoredNumber(OKLCH_STORAGE_KEYS.lightness, 0.9),
   )
-  const [oklchChroma, setOklchChroma] = useState<number>(() =>
+  const [chroma, setChroma] = useState<number>(() =>
     getStoredNumber(OKLCH_STORAGE_KEYS.chroma, 0.3),
   )
-  const [oklchLightnessVariance, setOklchLightnessVariance] = useState<number>(
-    () => getStoredNumber(OKLCH_STORAGE_KEYS.lightnessVariance, 0.05),
+  const [lightnessVariance, setLightnessVariance] = useState<number>(() =>
+    getStoredNumber(OKLCH_STORAGE_KEYS.lightnessVariance, 0.05),
   )
-  const [oklchChromaVariance, setOklchChromaVariance] = useState<number>(() =>
+  const [chromaVariance, setChromaVariance] = useState<number>(() =>
     getStoredNumber(OKLCH_STORAGE_KEYS.chromaVariance, 0.05),
   )
   const [regenNonce, setRegenNonce] = useState<number>(0)
 
-  // Persist OKLCH values to localStorage when they change
   useEffect(() => {
-    setStoredNumber(OKLCH_STORAGE_KEYS.lightness, oklchLightness)
-  }, [oklchLightness])
+    setStoredNumber(OKLCH_STORAGE_KEYS.lightness, lightness)
+  }, [lightness])
 
   useEffect(() => {
-    setStoredNumber(OKLCH_STORAGE_KEYS.chroma, oklchChroma)
-  }, [oklchChroma])
+    setStoredNumber(OKLCH_STORAGE_KEYS.chroma, chroma)
+  }, [chroma])
 
   useEffect(() => {
-    setStoredNumber(
-      OKLCH_STORAGE_KEYS.lightnessVariance,
-      oklchLightnessVariance,
-    )
-  }, [oklchLightnessVariance])
+    setStoredNumber(OKLCH_STORAGE_KEYS.lightnessVariance, lightnessVariance)
+  }, [lightnessVariance])
 
   useEffect(() => {
-    setStoredNumber(OKLCH_STORAGE_KEYS.chromaVariance, oklchChromaVariance)
-  }, [oklchChromaVariance])
+    setStoredNumber(OKLCH_STORAGE_KEYS.chromaVariance, chromaVariance)
+  }, [chromaVariance])
 
-  const regenerateOklchPalette = () => {
+  const regenerateImage = () => {
     setRegenNonce((prev) => prev + 1)
   }
 
@@ -89,15 +85,15 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
         setStrokeWidth,
         verticalHexagons,
         setVerticalHexagons,
-        oklchLightness,
-        setOklchLightness,
-        oklchChroma,
-        setOklchChroma,
-        oklchLightnessVariance,
-        setOklchLightnessVariance,
-        oklchChromaVariance,
-        setOklchChromaVariance,
-        regenerateOklchPalette,
+        lightness,
+        setLightness,
+        chroma,
+        setChroma,
+        lightnessVariance,
+        setLightnessVariance,
+        chromaVariance,
+        setChromaVariance,
+        regenerateImage,
         regenNonce,
       }}
     >
