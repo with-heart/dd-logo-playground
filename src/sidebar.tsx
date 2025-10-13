@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import {
   CHROMA_MAX,
   CHROMA_MIN,
@@ -17,6 +18,8 @@ import { NumberSlider } from './number-slider'
 import { useSettings } from './use-settings'
 
 export const Sidebar = () => {
+  const patternId = useId()
+
   const {
     pattern,
     setPattern,
@@ -82,8 +85,9 @@ export const Sidebar = () => {
         <h3>Tiling</h3>
         <div className="controls">
           <div>
-            <label htmlFor="pattern">Pattern</label>
+            <label htmlFor={patternId}>Pattern</label>
             <select
+              id={patternId}
               value={pattern}
               onChange={(e) => setPattern(e.target.value as 'hexagon')}
             >
@@ -102,6 +106,7 @@ export const Sidebar = () => {
 
           <label>
             <input
+              id={useId()}
               type="checkbox"
               checked={verticalHexagons}
               onChange={(e) => setVerticalHexagons(e.target.checked)}
