@@ -2,7 +2,7 @@
 
 :root {
   --color-background: oklch(0.1 0 0);
-  --color-space: oklch(0.2 0 0);
+  --color-border: oklch(0.5 0 0);
   --color-accent: oklch(0.8 0 0);
   --color-accent-hover: oklch(0.86 0 0);
   --color-accent-strong: oklch(0.7 0 0);
@@ -32,10 +32,10 @@ h3 {
     'footer footer';
   grid-template-columns: var(--columns);
   grid-template-rows: auto 1fr auto;
-  gap: var(--spacing-3);
+  gap: var(--spacing-1);
   height: 100vh;
-  padding: var(--spacing-4);
-  background: var(--color-space);
+  padding: var(--spacing-2);
+  background: var(--color-border);
 }
 
 .header {
@@ -49,15 +49,16 @@ h3 {
 }
 
 .header,
+.renderer,
+.sidebar,
 .footer {
   background-color: var(--color-background);
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: var(--spacing-4);
 }
 
-.renderer,
-.sidebar {
-  background-color: var(--color-background);
-  padding: var(--spacing-4);
+.header,
+.footer {
+  padding: var(--spacing-2) var(--spacing-4);
 }
 
 .renderer {
