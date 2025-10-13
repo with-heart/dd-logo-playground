@@ -1,3 +1,18 @@
+import {
+  CHROMA_MAX,
+  CHROMA_MIN,
+  CHROMA_STEP,
+  CHROMA_VARIANCE_MAX,
+  CHROMA_VARIANCE_MIN,
+  LIGHTNESS_MAX,
+  LIGHTNESS_MIN,
+  LIGHTNESS_STEP,
+  LIGHTNESS_VARIANCE_MAX,
+  LIGHTNESS_VARIANCE_MIN,
+  OUTLINE_WIDTH_MAX,
+  OUTLINE_WIDTH_MIN,
+  OUTLINE_WIDTH_STEP,
+} from './constants'
 import { NumberSlider } from './number-slider'
 import { useSettings } from './use-settings'
 
@@ -28,33 +43,33 @@ export const Sidebar = () => {
           <NumberSlider
             label="Lightness"
             value={oklchLightness}
-            min={0.05}
-            max={0.99}
-            step={0.01}
+            min={LIGHTNESS_MIN}
+            max={LIGHTNESS_MAX}
+            step={LIGHTNESS_STEP}
             onChange={setOklchLightness}
           />
           <NumberSlider
             label="Lightness Variance"
             value={oklchLightnessVariance}
-            min={0}
-            max={0.3}
-            step={0.01}
+            min={LIGHTNESS_VARIANCE_MIN}
+            max={LIGHTNESS_VARIANCE_MAX}
+            step={LIGHTNESS_STEP}
             onChange={setOklchLightnessVariance}
           />
           <NumberSlider
             label="Chroma"
             value={oklchChroma}
-            min={0.01}
-            max={0.4}
-            step={0.01}
+            min={CHROMA_MIN}
+            max={CHROMA_MAX}
+            step={CHROMA_STEP}
             onChange={setOklchChroma}
           />
           <NumberSlider
             label="Chroma Variance"
             value={oklchChromaVariance}
-            min={0}
-            max={0.2}
-            step={0.01}
+            min={CHROMA_VARIANCE_MIN}
+            max={CHROMA_VARIANCE_MAX}
+            step={CHROMA_STEP}
             onChange={setOklchChromaVariance}
           />
         </div>
@@ -83,9 +98,9 @@ export const Sidebar = () => {
           <NumberSlider
             label="Outline Width"
             value={strokeWidth}
-            min={0}
-            max={0.15}
-            step={0.01}
+            min={OUTLINE_WIDTH_MIN}
+            max={OUTLINE_WIDTH_MAX}
+            step={OUTLINE_WIDTH_STEP}
             onChange={setStrokeWidth}
           />
 
