@@ -78,6 +78,10 @@ export const Sidebar = () => {
 
   return (
     <aside className="sidebar">
+      <button type="button" onClick={regenerateImage}>
+        🔄 Regenerate Image
+      </button>
+
       <section>
         <h3>Colors</h3>
         <div className="controls">
@@ -113,16 +117,14 @@ export const Sidebar = () => {
             step={CHROMA_STEP}
             onChange={useSetColorValue('chromaVariance')}
           />
+          <button
+            type="button"
+            onClick={() => colors.send({ type: 'randomize' })}
+            data-size="sm"
+          >
+            🎲 Randomize Colors
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => colors.send({ type: 'randomize' })}
-        >
-          🎲 Randomize Colors
-        </button>
-        <button type="button" onClick={regenerateImage} className="regenerate">
-          🔄 Regenerate Image
-        </button>
       </section>
 
       <section>
