@@ -13,3 +13,7 @@ export const LIGHTNESS_VARIANCE_MAX = 1
 export const OUTLINE_WIDTH_MIN = 0
 export const OUTLINE_WIDTH_MAX = 0.15
 export const OUTLINE_WIDTH_STEP = 0.01
+
+export const CIRCLE_CENTER_X = 16.29
+export const CIRCLE_CENTER_Y = 16.685
+export const CIRCLE_RADIUS = 16.29

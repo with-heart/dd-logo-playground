@@ -13,13 +13,7 @@ import {
   LIGHTNESS_VARIANCE_MIN,
 } from './constants'
 import { clamp, rand, roundTo } from './math'
-
-export interface ColorValues {
-  chroma: number
-  chromaVariance: number
-  lightness: number
-  lightnessVariance: number
-}
+import type { ColorValues } from './types'
 
 const STORAGE_KEY = 'colors'
 
