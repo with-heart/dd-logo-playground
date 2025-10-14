@@ -53,7 +53,6 @@ h3 {
 .sidebar,
 .footer {
   background-color: var(--color-background);
-  padding: var(--spacing-4);
 }
 
 .header,
@@ -67,25 +66,35 @@ h3 {
   align-items: center;
   justify-content: center;
   container: renderer / inline-size;
+  padding: var(--spacing-4);
 }
 
 .sidebar {
   grid-area: sidebar;
-  overflow-y: auto;
-  max-height: calc(100vh - 2 * var(--spacing-3));
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-5);
 
-  & > section {
+  & > * {
+    padding: var(--spacing-4);
+  }
+
+  & > .config {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-4);
+    gap: var(--spacing-5);
+    overflow-y: auto;
 
-    & > .controls {
+    & > section {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-3);
+      gap: var(--spacing-4);
+
+      & > .controls {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-3);
+      }
     }
   }
 }

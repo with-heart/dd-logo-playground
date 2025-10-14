@@ -78,148 +78,152 @@ export const Sidebar = () => {
 
   return (
     <aside className="sidebar">
-      <button type="button" onClick={regenerateImage}>
-        🔄 Regenerate Image
-      </button>
+      <header>
+        <button type="button" onClick={regenerateImage}>
+          🔄 Regenerate Image
+        </button>
+      </header>
 
-      <section>
-        <h3>Colors</h3>
-        <div className="controls">
-          <NumberSlider
-            label="Lightness"
-            value={useLightness()}
-            min={LIGHTNESS_MIN}
-            max={LIGHTNESS_MAX}
-            step={LIGHTNESS_STEP}
-            onChange={useSetColorValue('lightness')}
-          />
-          <NumberSlider
-            label="Lightness Variance"
-            value={useLightnessVariance()}
-            min={LIGHTNESS_VARIANCE_MIN}
-            max={LIGHTNESS_VARIANCE_MAX}
-            step={LIGHTNESS_STEP}
-            onChange={useSetColorValue('lightnessVariance')}
-          />
-          <NumberSlider
-            label="Chroma"
-            value={useChroma()}
-            min={CHROMA_MIN}
-            max={CHROMA_MAX}
-            step={CHROMA_STEP}
-            onChange={useSetColorValue('chroma')}
-          />
-          <NumberSlider
-            label="Chroma Variance"
-            value={useChromaVariance()}
-            min={CHROMA_VARIANCE_MIN}
-            max={CHROMA_VARIANCE_MAX}
-            step={CHROMA_STEP}
-            onChange={useSetColorValue('chromaVariance')}
-          />
-          <button
-            type="button"
-            onClick={() => colors.send({ type: 'randomize' })}
-            data-size="sm"
-          >
-            🎲 Randomize Colors
-          </button>
-        </div>
-      </section>
-
-      <section>
-        <h3>Tiling</h3>
-        <div className="controls">
-          <div>
-            <label htmlFor={patternId}>Pattern</label>
-            <select
-              id={patternId}
-              value={pattern}
-              onChange={(e) => setPattern(e.target.value as 'hexagon')}
-            >
-              <option value="hexagon">Hexagon</option>
-            </select>
-          </div>
-
-          <NumberSlider
-            label="Outline Width"
-            value={strokeWidth}
-            min={OUTLINE_WIDTH_MIN}
-            max={OUTLINE_WIDTH_MAX}
-            step={OUTLINE_WIDTH_STEP}
-            onChange={setStrokeWidth}
-          />
-
-          <label>
-            <input
-              id={useId()}
-              type="checkbox"
-              checked={verticalHexagons}
-              onChange={(e) => setVerticalHexagons(e.target.checked)}
+      <div className="config">
+        <section>
+          <h3>Colors</h3>
+          <div className="controls">
+            <NumberSlider
+              label="Lightness"
+              value={useLightness()}
+              min={LIGHTNESS_MIN}
+              max={LIGHTNESS_MAX}
+              step={LIGHTNESS_STEP}
+              onChange={useSetColorValue('lightness')}
             />
-            Vertical hexagons (pointy top)
-          </label>
-        </div>
-      </section>
-
-      <section>
-        <h3>Exports</h3>
-        <div className="controls">
-          <div>
-            <label htmlFor={exportTypeId}>File type</label>
-            <select
-              id={exportTypeId}
-              value={exportType}
-              onChange={(e) => setExportType(e.target.value as 'svg' | 'png')}
+            <NumberSlider
+              label="Lightness Variance"
+              value={useLightnessVariance()}
+              min={LIGHTNESS_VARIANCE_MIN}
+              max={LIGHTNESS_VARIANCE_MAX}
+              step={LIGHTNESS_STEP}
+              onChange={useSetColorValue('lightnessVariance')}
+            />
+            <NumberSlider
+              label="Chroma"
+              value={useChroma()}
+              min={CHROMA_MIN}
+              max={CHROMA_MAX}
+              step={CHROMA_STEP}
+              onChange={useSetColorValue('chroma')}
+            />
+            <NumberSlider
+              label="Chroma Variance"
+              value={useChromaVariance()}
+              min={CHROMA_VARIANCE_MIN}
+              max={CHROMA_VARIANCE_MAX}
+              step={CHROMA_STEP}
+              onChange={useSetColorValue('chromaVariance')}
+            />
+            <button
+              type="button"
+              onClick={() => colors.send({ type: 'randomize' })}
+              data-size="sm"
             >
-              <option value="svg">SVG</option>
-              <option value="png">PNG</option>
-            </select>
+              🎲 Randomize Colors
+            </button>
           </div>
+        </section>
 
-          {exportType !== 'svg' && (
+        <section>
+          <h3>Tiling</h3>
+          <div className="controls">
             <div>
-              <label htmlFor={exportSizeId}>Size</label>
+              <label htmlFor={patternId}>Pattern</label>
               <select
-                id={exportSizeId}
-                value={exportSize}
-                onChange={(e) => setExportSize(parseInt(e.target.value, 10))}
+                id={patternId}
+                value={pattern}
+                onChange={(e) => setPattern(e.target.value as 'hexagon')}
               >
-                <option value={64}>64x64</option>
-                <option value={128}>128x128</option>
-                <option value={256}>256x256</option>
-                <option value={512}>512x512</option>
-                <option value={1024}>1024x1024</option>
+                <option value="hexagon">Hexagon</option>
               </select>
             </div>
-          )}
 
-          <div aria-live="polite">
-            {estimating ?
-              'Estimating…'
-            : estimatedBytes != null ?
-              `Estimated size: ${formatBytes(estimatedBytes)}`
-            : 'Estimated size: —'}
+            <NumberSlider
+              label="Outline Width"
+              value={strokeWidth}
+              min={OUTLINE_WIDTH_MIN}
+              max={OUTLINE_WIDTH_MAX}
+              step={OUTLINE_WIDTH_STEP}
+              onChange={setStrokeWidth}
+            />
+
+            <label>
+              <input
+                id={useId()}
+                type="checkbox"
+                checked={verticalHexagons}
+                onChange={(e) => setVerticalHexagons(e.target.checked)}
+              />
+              Vertical hexagons (pointy top)
+            </label>
           </div>
+        </section>
 
-          <button
-            type="button"
-            onClick={async () => {
-              if (exportType === 'svg') {
-                await exportImage({ type: 'svg', filenameBase: 'logo' })
-              } else {
-                await exportImage({
-                  type: 'png',
-                  size: exportSize,
-                  filenameBase: 'logo',
-                })
-              }
-            }}
-          >
-            Export
-          </button>
-        </div>
-      </section>
+        <section>
+          <h3>Exports</h3>
+          <div className="controls">
+            <div>
+              <label htmlFor={exportTypeId}>File type</label>
+              <select
+                id={exportTypeId}
+                value={exportType}
+                onChange={(e) => setExportType(e.target.value as 'svg' | 'png')}
+              >
+                <option value="svg">SVG</option>
+                <option value="png">PNG</option>
+              </select>
+            </div>
+
+            {exportType !== 'svg' && (
+              <div>
+                <label htmlFor={exportSizeId}>Size</label>
+                <select
+                  id={exportSizeId}
+                  value={exportSize}
+                  onChange={(e) => setExportSize(parseInt(e.target.value, 10))}
+                >
+                  <option value={64}>64x64</option>
+                  <option value={128}>128x128</option>
+                  <option value={256}>256x256</option>
+                  <option value={512}>512x512</option>
+                  <option value={1024}>1024x1024</option>
+                </select>
+              </div>
+            )}
+
+            <div aria-live="polite">
+              {estimating ?
+                'Estimating…'
+              : estimatedBytes != null ?
+                `Estimated size: ${formatBytes(estimatedBytes)}`
+              : 'Estimated size: —'}
+            </div>
+
+            <button
+              type="button"
+              onClick={async () => {
+                if (exportType === 'svg') {
+                  await exportImage({ type: 'svg', filenameBase: 'logo' })
+                } else {
+                  await exportImage({
+                    type: 'png',
+                    size: exportSize,
+                    filenameBase: 'logo',
+                  })
+                }
+              }}
+            >
+              Export
+            </button>
+          </div>
+        </section>
+      </div>
     </aside>
   )
 }
