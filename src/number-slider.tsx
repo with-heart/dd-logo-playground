@@ -36,7 +36,7 @@ export const NumberSlider = ({
           value={value}
           onChange={handleSliderChange}
         />
-        <span className="value">{value}</span>
+        <span className="value">{Number(value).toFixed(2)}</span>
       </div>
     </div>
   )
