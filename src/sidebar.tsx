@@ -1,13 +1,5 @@
 import { useEffect, useId, useState } from 'react'
 import {
-  colors,
-  useChroma,
-  useChromaVariance,
-  useLightness,
-  useLightnessVariance,
-  useSetColorValue,
-} from './colors.machine'
-import {
   CHROMA_MAX,
   CHROMA_MIN,
   CHROMA_STEP,
@@ -25,6 +17,14 @@ import {
 import { estimateImageSize, exportImage } from './exports'
 import { NumberSlider } from './number-slider'
 import { useSettings } from './use-settings'
+
+const formatBytes = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`
+  const kb = bytes / 1024
+  if (kb < 1024) return `${Math.round(kb)} KB`
+  const mb = kb / 1024
+  return `${mb.toFixed(2)} MB`
+}
 
 export const Sidebar = () => {
   const patternId = useId()
@@ -44,16 +44,16 @@ export const Sidebar = () => {
     verticalHexagons,
     setVerticalHexagons,
     regenerateImage,
+    lightness,
+    setLightness,
+    lightnessVariance,
+    setLightnessVariance,
+    chroma,
+    setChroma,
+    chromaVariance,
+    setChromaVariance,
+    randomizeColors,
   } = useSettings()
-
-  // Human-friendly byte formatter
-  const formatBytes = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`
-    const kb = bytes / 1024
-    if (kb < 1024) return `${Math.round(kb)} KB`
-    const mb = kb / 1024
-    return `${mb.toFixed(2)} MB`
-  }
 
   // Estimate output size when export settings or image change
   useEffect(() => {
@@ -90,41 +90,37 @@ export const Sidebar = () => {
           <div className="controls">
             <NumberSlider
               label="Lightness"
-              value={useLightness()}
+              value={lightness}
               min={LIGHTNESS_MIN}
               max={LIGHTNESS_MAX}
               step={LIGHTNESS_STEP}
-              onChange={useSetColorValue('lightness')}
+              onChange={setLightness}
             />
             <NumberSlider
               label="Lightness Variance"
-              value={useLightnessVariance()}
+              value={lightnessVariance}
               min={LIGHTNESS_VARIANCE_MIN}
               max={LIGHTNESS_VARIANCE_MAX}
               step={LIGHTNESS_STEP}
-              onChange={useSetColorValue('lightnessVariance')}
+              onChange={setLightnessVariance}
             />
             <NumberSlider
               label="Chroma"
-              value={useChroma()}
+              value={chroma}
               min={CHROMA_MIN}
               max={CHROMA_MAX}
               step={CHROMA_STEP}
-              onChange={useSetColorValue('chroma')}
+              onChange={setChroma}
             />
             <NumberSlider
               label="Chroma Variance"
-              value={useChromaVariance()}
+              value={chromaVariance}
               min={CHROMA_VARIANCE_MIN}
               max={CHROMA_VARIANCE_MAX}
               step={CHROMA_STEP}
-              onChange={useSetColorValue('chromaVariance')}
+              onChange={setChromaVariance}
             />
-            <button
-              type="button"
-              onClick={() => colors.send({ type: 'randomize' })}
-              data-size="sm"
-            >
+            <button type="button" onClick={randomizeColors} data-size="sm">
               🎲 Randomize Colors
             </button>
           </div>

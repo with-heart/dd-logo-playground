@@ -25,3 +25,6 @@ export const mulberry32 = (seed: number) => {
     return ((r ^ (r >>> 14)) >>> 0) / 4294967296
   }
 }
+
+/** Generate a new 32-bit unsigned integer seed. */
+export const randomSeed = () => (Math.random() * 0xffffffff) >>> 0
