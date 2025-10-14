@@ -1,5 +1,13 @@
 import { useEffect, useId, useState } from 'react'
 import {
+  colors,
+  useChroma,
+  useChromaVariance,
+  useLightness,
+  useLightnessVariance,
+  useSetColorValue,
+} from './colors.machine'
+import {
   CHROMA_MAX,
   CHROMA_MIN,
   CHROMA_STEP,
@@ -35,16 +43,7 @@ export const Sidebar = () => {
     setStrokeWidth,
     verticalHexagons,
     setVerticalHexagons,
-    lightness,
-    setLightness,
-    chroma,
-    setChroma,
-    lightnessVariance,
-    setLightnessVariance,
-    chromaVariance,
-    setChromaVariance,
     regenerateImage,
-    randomizeColors,
   } = useSettings()
 
   // Human-friendly byte formatter
@@ -84,38 +83,41 @@ export const Sidebar = () => {
         <div className="controls">
           <NumberSlider
             label="Lightness"
-            value={lightness}
+            value={useLightness()}
             min={LIGHTNESS_MIN}
             max={LIGHTNESS_MAX}
             step={LIGHTNESS_STEP}
-            onChange={setLightness}
+            onChange={useSetColorValue('lightness')}
           />
           <NumberSlider
             label="Lightness Variance"
-            value={lightnessVariance}
+            value={useLightnessVariance()}
             min={LIGHTNESS_VARIANCE_MIN}
             max={LIGHTNESS_VARIANCE_MAX}
             step={LIGHTNESS_STEP}
-            onChange={setLightnessVariance}
+            onChange={useSetColorValue('lightnessVariance')}
           />
           <NumberSlider
             label="Chroma"
-            value={chroma}
+            value={useChroma()}
             min={CHROMA_MIN}
             max={CHROMA_MAX}
             step={CHROMA_STEP}
-            onChange={setChroma}
+            onChange={useSetColorValue('chroma')}
           />
           <NumberSlider
             label="Chroma Variance"
-            value={chromaVariance}
+            value={useChromaVariance()}
             min={CHROMA_VARIANCE_MIN}
             max={CHROMA_VARIANCE_MAX}
             step={CHROMA_STEP}
-            onChange={setChromaVariance}
+            onChange={useSetColorValue('chromaVariance')}
           />
         </div>
-        <button type="button" onClick={randomizeColors}>
+        <button
+          type="button"
+          onClick={() => colors.send({ type: 'randomize' })}
+        >
           🎲 Randomize Colors
         </button>
         <button type="button" onClick={regenerateImage} className="regenerate">

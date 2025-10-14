@@ -1,5 +1,6 @@
 import type { JSX } from 'react'
 import { useId } from 'react'
+import { useColorValues } from './colors.machine'
 import { useSettings } from './use-settings'
 
 const oklchToHex = (l: number, c: number, h: number): string => {
@@ -344,14 +345,10 @@ export const Logo = () => {
   const circleRadius = 16.29
   const hexRadius = 1.2
 
-  const {
-    strokeWidth,
-    verticalHexagons,
-    lightness,
-    chroma,
-    lightnessVariance,
-    chromaVariance,
-  } = useSettings()
+  const { strokeWidth, verticalHexagons } = useSettings()
+  const { chroma, chromaVariance, lightness, lightnessVariance } =
+    useColorValues()
+
   const clipPathId = useId()
 
   const hexagons = generateHexagonGrid(

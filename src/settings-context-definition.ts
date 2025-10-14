@@ -8,16 +8,7 @@ export interface SettingsContextType {
   setStrokeWidth: (width: number) => void
   verticalHexagons: boolean
   setVerticalHexagons: (vertical: boolean) => void
-  lightness: number
-  setLightness: (lightness: number) => void
-  chroma: number
-  setChroma: (chroma: number) => void
-  lightnessVariance: number
-  setLightnessVariance: (variance: number) => void
-  chromaVariance: number
-  setChromaVariance: (variance: number) => void
   regenerateImage: () => void
-  randomizeColors: () => void
   regenNonce: number
 }
 
