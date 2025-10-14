@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useEffect, useId, useState } from 'react'
 import {
   CHROMA_MAX,
   CHROMA_MIN,
@@ -14,11 +14,19 @@ import {
   OUTLINE_WIDTH_MIN,
   OUTLINE_WIDTH_STEP,
 } from './constants'
+import { estimateImageSize, exportImage } from './exports'
 import { NumberSlider } from './number-slider'
 import { useSettings } from './use-settings'
 
 export const Sidebar = () => {
   const patternId = useId()
+  const exportTypeId = useId()
+  const exportSizeId = useId()
+
+  const [exportType, setExportType] = useState<'svg' | 'png'>('png')
+  const [exportSize, setExportSize] = useState<number>(128)
+  const [estimatedBytes, setEstimatedBytes] = useState<number | null>(null)
+  const [estimating, setEstimating] = useState<boolean>(false)
 
   const {
     pattern,
@@ -38,6 +46,36 @@ export const Sidebar = () => {
     regenerateImage,
     randomizeColors,
   } = useSettings()
+
+  // Human-friendly byte formatter
+  const formatBytes = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`
+    const kb = bytes / 1024
+    if (kb < 1024) return `${Math.round(kb)} KB`
+    const mb = kb / 1024
+    return `${mb.toFixed(2)} MB`
+  }
+
+  // Estimate output size when export settings or image change
+  useEffect(() => {
+    let cancelled = false
+    const estimate = async () => {
+      if (exportType === 'svg') {
+        const bytes = await estimateImageSize({ type: 'svg' })
+        if (!cancelled) setEstimatedBytes(bytes)
+        return
+      }
+      setEstimating(true)
+      const bytes = await estimateImageSize({ type: 'png', size: exportSize })
+      setEstimating(false)
+      if (!cancelled) setEstimatedBytes(bytes)
+    }
+
+    estimate()
+    return () => {
+      cancelled = true
+    }
+  }, [exportType, exportSize])
 
   return (
     <aside className="sidebar">
@@ -117,6 +155,65 @@ export const Sidebar = () => {
             />
             Vertical hexagons (pointy top)
           </label>
+        </div>
+      </section>
+
+      <section>
+        <h3>Exports</h3>
+        <div className="controls">
+          <div>
+            <label htmlFor={exportTypeId}>File type</label>
+            <select
+              id={exportTypeId}
+              value={exportType}
+              onChange={(e) => setExportType(e.target.value as 'svg' | 'png')}
+            >
+              <option value="svg">SVG</option>
+              <option value="png">PNG</option>
+            </select>
+          </div>
+
+          {exportType !== 'svg' && (
+            <div>
+              <label htmlFor={exportSizeId}>Size</label>
+              <select
+                id={exportSizeId}
+                value={exportSize}
+                onChange={(e) => setExportSize(parseInt(e.target.value, 10))}
+              >
+                <option value={64}>64x64</option>
+                <option value={128}>128x128</option>
+                <option value={256}>256x256</option>
+                <option value={512}>512x512</option>
+                <option value={1024}>1024x1024</option>
+              </select>
+            </div>
+          )}
+
+          <div aria-live="polite">
+            {estimating ?
+              'Estimating…'
+            : estimatedBytes != null ?
+              `Estimated size: ${formatBytes(estimatedBytes)}`
+            : 'Estimated size: —'}
+          </div>
+
+          <button
+            type="button"
+            onClick={async () => {
+              if (exportType === 'svg') {
+                await exportImage({ type: 'svg', filenameBase: 'logo' })
+              } else {
+                await exportImage({
+                  type: 'png',
+                  size: exportSize,
+                  filenameBase: 'logo',
+                })
+              }
+            }}
+          >
+            Export
+          </button>
         </div>
       </section>
     </aside>
