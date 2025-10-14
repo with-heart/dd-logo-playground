@@ -27,5 +27,5 @@
 }
 
 .font-pixel {
-  font-family: 'VT323', monospace;
+  font-family: var(--font-vt323), monospace;
 }

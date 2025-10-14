@@ -1,9 +1,8 @@
-import './app.css'
 import { Renderer } from './renderer'
 import { SettingsProvider } from './settings-context'
 import { Sidebar } from './sidebar'
 
-function App() {
+export function App() {
   return (
     <SettingsProvider>
       <header className="header">Developer DAO Logo Playground</header>
