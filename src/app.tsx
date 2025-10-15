@@ -1,3 +1,4 @@
+'use client'
 import { Renderer } from './renderer'
 import { SettingsProvider } from './settings-context'
 import { Sidebar } from './sidebar'
