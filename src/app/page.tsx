@@ -1,6 +1,6 @@
-import App from '@/app'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import Client from './client'
 import { ensureCanonicalUrl } from './url-settings'
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
 
   return (
     <main id="root">
-      <App />
+      <Client />
     </main>
   )
 }
