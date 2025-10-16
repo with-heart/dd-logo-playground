@@ -8,7 +8,7 @@ export function App() {
       id="root"
       className="grid h-screen grid-cols-[4fr_minmax(300px,_1fr)] grid-rows-[auto_1fr_auto] gap-1 bg-zinc-700 p-2 *:bg-zinc-950"
     >
-      <header className="px-4 py-2 font-semibold [grid-area:_header]">
+      <header className="px-4 py-2 text-center font-medium [grid-area:_header]">
         Developer DAO Logo Playground
       </header>
       <article className="@container flex items-center justify-center p-4 [grid-area:_image] *:aspect-square *:w-[75cqmin]">
