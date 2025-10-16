@@ -12,7 +12,7 @@ const vt323 = VT323({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${vt323.variable}`}>
+    <html lang="en" className={`${inter.variable} ${vt323.variable} dark`}>
       <body>
         <NuqsAdapter>{children}</NuqsAdapter>
       </body>

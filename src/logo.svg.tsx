@@ -13,7 +13,7 @@ export const Logo = () => {
 
   return (
     <svg
-      className="logo"
+      id="logo"
       viewBox="0 0 33 34"
       fill="none"
       preserveAspectRatio="xMidYMid meet"

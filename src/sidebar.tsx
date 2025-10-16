@@ -1,4 +1,16 @@
-import { useEffect, useId, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
+import { Switch } from '@/components/ui/switch'
+import { DownloadIcon, RotateCcwIcon, ShuffleIcon } from 'lucide-react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
   CHROMA_MAX,
   CHROMA_MIN,
@@ -15,7 +27,6 @@ import {
   OUTLINE_WIDTH_STEP,
 } from './constants'
 import { estimateImageSize, exportImage } from './exports'
-import { NumberSlider } from './number-slider'
 import { useSettings } from './use-settings'
 
 const formatBytes = (bytes: number) => {
@@ -26,11 +37,22 @@ const formatBytes = (bytes: number) => {
   return `${mb.toFixed(2)} MB`
 }
 
-export const Sidebar = () => {
-  const patternId = useId()
-  const exportTypeId = useId()
-  const exportSizeId = useId()
+const Section = ({
+  children,
+  title,
+}: {
+  children: ReactNode
+  title: string
+}) => {
+  return (
+    <section className="flex flex-col gap-4">
+      <h3 className="text-lg">{title}</h3>
+      <div className="flex flex-col gap-3">{children}</div>
+    </section>
+  )
+}
 
+export const Sidebar = () => {
   const [exportType, setExportType] = useState<'svg' | 'png'>('png')
   const [exportSize, setExportSize] = useState<number>(128)
   const [estimatedBytes, setEstimatedBytes] = useState<number | null>(null)
@@ -77,149 +99,190 @@ export const Sidebar = () => {
   }, [exportType, exportSize])
 
   return (
-    <aside className="sidebar">
+    <>
       <header>
-        <button type="button" onClick={regenerateImage}>
-          🔄 Regenerate Image
-        </button>
+        <Button size="lg" className="w-full" onClick={regenerateImage}>
+          <RotateCcwIcon /> Regenerate Image
+        </Button>
       </header>
 
-      <div className="config">
-        <section>
-          <h3>Colors</h3>
-          <div className="controls">
-            <NumberSlider
-              label="Lightness"
-              value={lightness}
+      <div className="flex flex-col gap-5 overflow-y-auto">
+        <Section title="Colors">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline justify-between">
+              <Label id="lightness-label">Lightness</Label>
+              <span className="text-xs">{lightness}</span>
+            </div>
+            <Slider
+              aria-labelledby="lightness-label"
+              value={[lightness]}
+              onValueChange={(value) => setLightness(value[0])}
               min={LIGHTNESS_MIN}
               max={LIGHTNESS_MAX}
               step={LIGHTNESS_STEP}
-              onChange={setLightness}
             />
-            <NumberSlider
-              label="Lightness Variance"
-              value={lightnessVariance}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline justify-between">
+              <Label id="lightness-variance-label">Lightness Variance</Label>
+              <span className="text-xs">{lightnessVariance}</span>
+            </div>
+            <Slider
+              aria-labelledby="lightness-variance-label"
+              value={[lightnessVariance]}
+              onValueChange={(value) => setLightnessVariance(value[0])}
               min={LIGHTNESS_VARIANCE_MIN}
               max={LIGHTNESS_VARIANCE_MAX}
               step={LIGHTNESS_STEP}
-              onChange={setLightnessVariance}
             />
-            <NumberSlider
-              label="Chroma"
-              value={chroma}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline justify-between">
+              <Label id="chroma-label">Chroma</Label>
+              <span className="text-xs">{chroma}</span>
+            </div>
+            <Slider
+              aria-labelledby="chroma-label"
+              value={[chroma]}
+              onValueChange={(value) => setChroma(value[0])}
               min={CHROMA_MIN}
               max={CHROMA_MAX}
               step={CHROMA_STEP}
-              onChange={setChroma}
             />
-            <NumberSlider
-              label="Chroma Variance"
-              value={chromaVariance}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline justify-between">
+              <Label id="chroma-variance-label">Chroma Variance</Label>
+              <span className="text-xs">{chromaVariance}</span>
+            </div>
+            <Slider
+              aria-labelledby="chroma-variance-label"
+              value={[chromaVariance]}
+              onValueChange={(value) => setChromaVariance(value[0])}
               min={CHROMA_VARIANCE_MIN}
               max={CHROMA_VARIANCE_MAX}
               step={CHROMA_STEP}
-              onChange={setChromaVariance}
             />
-            <button type="button" onClick={randomizeColors} data-size="sm">
-              🎲 Randomize Colors
-            </button>
           </div>
-        </section>
 
-        <section>
-          <h3>Tiling</h3>
-          <div className="controls">
-            <div>
-              <label htmlFor={patternId}>Pattern</label>
-              <select
-                id={patternId}
-                value={pattern}
-                onChange={(e) => setPattern(e.target.value as 'hexagon')}
-              >
-                <option value="hexagon">Hexagon</option>
-              </select>
+          <Button size="sm" variant="outline" onClick={randomizeColors}>
+            <ShuffleIcon /> Randomize Colors
+          </Button>
+        </Section>
+
+        <Section title="Tiling">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="pattern">Pattern</Label>
+            <Select value={pattern} onValueChange={setPattern}>
+              <SelectTrigger id="pattern" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent id="pattern">
+                <SelectItem value="hexagon">Hexagon</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Switch
+              id="vertical-hexagons"
+              checked={verticalHexagons}
+              onCheckedChange={setVerticalHexagons}
+            />
+            <Label htmlFor="vertical-hexagons">
+              Vertical hexagons (pointy top)
+            </Label>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline justify-between">
+              <Label id="stroke-width-label">Outline Width</Label>
+              <span className="text-xs">{strokeWidth}</span>
             </div>
-
-            <NumberSlider
-              label="Outline Width"
-              value={strokeWidth}
+            <Slider
+              aria-labelledby="stroke-width-label"
+              value={[strokeWidth]}
+              onValueChange={(value) => setStrokeWidth(value[0])}
               min={OUTLINE_WIDTH_MIN}
               max={OUTLINE_WIDTH_MAX}
               step={OUTLINE_WIDTH_STEP}
-              onChange={setStrokeWidth}
             />
-
-            <label>
-              <input
-                id={useId()}
-                type="checkbox"
-                checked={verticalHexagons}
-                onChange={(e) => setVerticalHexagons(e.target.checked)}
-              />
-              Vertical hexagons (pointy top)
-            </label>
           </div>
-        </section>
+        </Section>
 
-        <section>
-          <h3>Exports</h3>
-          <div className="controls">
-            <div>
-              <label htmlFor={exportTypeId}>File type</label>
-              <select
-                id={exportTypeId}
-                value={exportType}
-                onChange={(e) => setExportType(e.target.value as 'svg' | 'png')}
-              >
-                <option value="svg">SVG</option>
-                <option value="png">PNG</option>
-              </select>
-            </div>
-
-            {exportType !== 'svg' && (
-              <div>
-                <label htmlFor={exportSizeId}>Size</label>
-                <select
-                  id={exportSizeId}
-                  value={exportSize}
-                  onChange={(e) => setExportSize(parseInt(e.target.value, 10))}
-                >
-                  <option value={64}>64x64</option>
-                  <option value={128}>128x128</option>
-                  <option value={256}>256x256</option>
-                  <option value={512}>512x512</option>
-                  <option value={1024}>1024x1024</option>
-                </select>
-              </div>
-            )}
-
-            <div aria-live="polite">
-              {estimating ?
-                'Estimating…'
-              : estimatedBytes != null ?
-                `Estimated size: ${formatBytes(estimatedBytes)}`
-              : 'Estimated size: —'}
-            </div>
-
-            <button
-              type="button"
-              onClick={async () => {
-                if (exportType === 'svg') {
-                  await exportImage({ type: 'svg', filenameBase: 'logo' })
-                } else {
-                  await exportImage({
-                    type: 'png',
-                    size: exportSize,
-                    filenameBase: 'logo',
-                  })
-                }
-              }}
+        <Section title="Exports">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="file-type">File Type</Label>
+            <Select
+              value={exportType}
+              onValueChange={(value) => setExportType(value as 'svg' | 'png')}
             >
-              Export
-            </button>
+              <SelectTrigger id="file-type" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="svg">SVG</SelectItem>
+                <SelectItem value="png">PNG</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        </section>
+
+          {exportType !== 'svg' && (
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="file-size">File Size</Label>
+              <Select
+                value={exportSize.toString()}
+                onValueChange={(value) =>
+                  setExportSize(
+                    parseInt(value, 10) as 64 | 128 | 256 | 512 | 1024,
+                  )
+                }
+              >
+                <SelectTrigger id="file-size" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="64">64x64</SelectItem>
+                  <SelectItem value="128">128x128</SelectItem>
+                  <SelectItem value="256">256x256</SelectItem>
+                  <SelectItem value="512">512x512</SelectItem>
+                  <SelectItem value="1024">1024x1024</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div aria-live="polite">
+            {estimating ?
+              'Estimating…'
+            : estimatedBytes != null ?
+              `Estimated size: ${formatBytes(estimatedBytes)}`
+            : 'Estimated size: —'}
+          </div>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={async () => {
+              if (exportType === 'svg') {
+                await exportImage({ type: 'svg', filenameBase: 'logo' })
+              } else {
+                await exportImage({
+                  type: 'png',
+                  size: exportSize,
+                  filenameBase: 'logo',
+                })
+              }
+            }}
+          >
+            <DownloadIcon />
+            Export
+          </Button>
+        </Section>
       </div>
-    </aside>
+    </>
   )
 }

@@ -20,9 +20,5 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
     redirect(`?${u.toString()}`)
   }
 
-  return (
-    <main id="root">
-      <Client />
-    </main>
-  )
+  return <Client />
 }

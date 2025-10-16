@@ -3,7 +3,7 @@
 export type ExportType = 'svg' | 'png'
 
 const queryCurrentSVG = (): SVGSVGElement | null => {
-  return document.querySelector('.renderer svg') as SVGSVGElement | null
+  return document.querySelector('#logo') as SVGSVGElement | null
 }
 
 const ensureNamespaces = (svg: SVGSVGElement) => {
