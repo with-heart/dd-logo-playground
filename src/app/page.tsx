@@ -1,5 +1,7 @@
+import App from '@/app'
 import type { Metadata } from 'next'
-import { Client } from './client'
+import { redirect } from 'next/navigation'
+import { ensureCanonicalUrl } from './url-settings'
 
 export const metadata: Metadata = {
   title: 'Developer DAO Logo Playground',
@@ -8,10 +10,14 @@ export const metadata: Metadata = {
   icons: { icon: '/favicon.ico' },
 }
 
-export default function Page() {
+export default async function Page({ searchParams }: PageProps<'/'>) {
+  const params = (await searchParams) ?? {}
+  const canonical = ensureCanonicalUrl(params)
+  if (canonical) redirect(canonical)
+
   return (
     <main id="root">
-      <Client />
+      <App />
     </main>
   )
 }
