@@ -8,8 +8,6 @@ export const useHexColors = (count: number) => {
     useSettings()
 
   return useMemo(() => {
-    // Seeded RNG so regenNonce produces a distinct palette each trigger while
-    // keeping dependency usage explicit for the linter.
     const rng = mulberry32(seed || 1)
     return generateOklchColors(
       count,

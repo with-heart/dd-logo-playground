@@ -1,11 +1,10 @@
 'use client'
 import { Renderer } from '../renderer'
-import { SettingsProvider } from '../settings-context'
 import { Sidebar } from '../sidebar'
 
 export function App() {
   return (
-    <SettingsProvider>
+    <>
       <header className="header">Developer DAO Logo Playground</header>
       <Renderer />
       <Sidebar />
@@ -19,7 +18,7 @@ export function App() {
           with-heart
         </a>
       </footer>
-    </SettingsProvider>
+    </>
   )
 }
 
