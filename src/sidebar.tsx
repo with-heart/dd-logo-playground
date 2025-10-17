@@ -10,7 +10,7 @@ import {
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { DownloadIcon, RotateCcwIcon, ShuffleIcon } from 'lucide-react'
-import { useEffect, useState, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { CompoundSliderGroup } from './components/compound-slider-group'
 import {
   CHROMA_MAX,
@@ -23,16 +23,8 @@ import {
   OUTLINE_WIDTH_MIN,
   OUTLINE_WIDTH_STEP,
 } from './constants'
-import { estimateImageSize, exportImage } from './exports'
+import { useExport } from './exports'
 import { useSettings } from './use-settings'
-
-const formatBytes = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`
-  const kb = bytes / 1024
-  if (kb < 1024) return `${Math.round(kb)} KB`
-  const mb = kb / 1024
-  return `${mb.toFixed(2)} MB`
-}
 
 const Section = ({
   children,
@@ -50,10 +42,14 @@ const Section = ({
 }
 
 export const Sidebar = () => {
-  const [exportType, setExportType] = useState<'svg' | 'png'>('png')
-  const [exportSize, setExportSize] = useState<number>(128)
-  const [estimatedBytes, setEstimatedBytes] = useState<number | null>(null)
-  const [estimating, setEstimating] = useState<boolean>(false)
+  const {
+    estimation,
+    exportSize,
+    exportType,
+    onExport,
+    setExportSize,
+    setExportType,
+  } = useExport()
 
   const {
     pattern,
@@ -73,27 +69,6 @@ export const Sidebar = () => {
     setChromaVariance,
     randomizeColors,
   } = useSettings()
-
-  // Estimate output size when export settings or image change
-  useEffect(() => {
-    let cancelled = false
-    const estimate = async () => {
-      if (exportType === 'svg') {
-        const bytes = await estimateImageSize({ type: 'svg' })
-        if (!cancelled) setEstimatedBytes(bytes)
-        return
-      }
-      setEstimating(true)
-      const bytes = await estimateImageSize({ type: 'png', size: exportSize })
-      setEstimating(false)
-      if (!cancelled) setEstimatedBytes(bytes)
-    }
-
-    estimate()
-    return () => {
-      cancelled = true
-    }
-  }, [exportType, exportSize])
 
   return (
     <>
@@ -213,29 +188,9 @@ export const Sidebar = () => {
             </div>
           )}
 
-          <div aria-live="polite">
-            {estimating ?
-              'Estimating…'
-            : estimatedBytes != null ?
-              `Estimated size: ${formatBytes(estimatedBytes)}`
-            : 'Estimated size: —'}
-          </div>
+          <div aria-live="polite">{estimation}</div>
 
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={async () => {
-              if (exportType === 'svg') {
-                await exportImage({ type: 'svg', filenameBase: 'logo' })
-              } else {
-                await exportImage({
-                  type: 'png',
-                  size: exportSize,
-                  filenameBase: 'logo',
-                })
-              }
-            }}
-          >
+          <Button size="sm" variant="outline" onClick={onExport}>
             <DownloadIcon />
             Export
           </Button>

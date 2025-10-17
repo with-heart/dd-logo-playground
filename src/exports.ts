@@ -1,6 +1,70 @@
 // Utilities for exporting the current logo as SVG or PNG
 
+import { useCallback, useEffect, useState } from 'react'
+
 export type ExportType = 'svg' | 'png'
+
+const formatBytes = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`
+  const kb = bytes / 1024
+  if (kb < 1024) return `${Math.round(kb)} KB`
+  const mb = kb / 1024
+  return `${mb.toFixed(2)} MB`
+}
+
+export const useExport = () => {
+  const [exportType, setExportType] = useState<'svg' | 'png'>('png')
+  const [exportSize, setExportSize] = useState<number>(128)
+  const [estimatedBytes, setEstimatedBytes] = useState<number | null>(null)
+  const [estimating, setEstimating] = useState<boolean>(false)
+
+  const onExport = useCallback(async () => {
+    if (exportType === 'svg') {
+      await exportImage({ type: 'svg', filenameBase: 'logo' })
+    } else {
+      await exportImage({
+        type: 'png',
+        size: exportSize,
+        filenameBase: 'logo',
+      })
+    }
+  }, [exportType, exportSize])
+
+  const estimation =
+    estimating ? 'Estimating...'
+    : estimatedBytes != null ? `Estimated size: ${formatBytes(estimatedBytes)}`
+    : 'Estimated size: -'
+
+  // Estimate output size when export settings or image change
+  useEffect(() => {
+    let cancelled = false
+    const estimate = async () => {
+      if (exportType === 'svg') {
+        const bytes = await estimateImageSize({ type: 'svg' })
+        if (!cancelled) setEstimatedBytes(bytes)
+        return
+      }
+      setEstimating(true)
+      const bytes = await estimateImageSize({ type: 'png', size: exportSize })
+      setEstimating(false)
+      if (!cancelled) setEstimatedBytes(bytes)
+    }
+
+    estimate()
+    return () => {
+      cancelled = true
+    }
+  }, [exportType, exportSize])
+
+  return {
+    estimation,
+    onExport,
+    exportType,
+    setExportType,
+    exportSize,
+    setExportSize,
+  }
+}
 
 const queryCurrentSVG = (): SVGSVGElement | null => {
   return document.querySelector('#logo') as SVGSVGElement | null
