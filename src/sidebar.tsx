@@ -11,17 +11,14 @@ import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { DownloadIcon, RotateCcwIcon, ShuffleIcon } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
+import { CompoundSliderGroup } from './components/compound-slider-group'
 import {
   CHROMA_MAX,
   CHROMA_MIN,
   CHROMA_STEP,
-  CHROMA_VARIANCE_MAX,
-  CHROMA_VARIANCE_MIN,
   LIGHTNESS_MAX,
   LIGHTNESS_MIN,
   LIGHTNESS_STEP,
-  LIGHTNESS_VARIANCE_MAX,
-  LIGHTNESS_VARIANCE_MIN,
   OUTLINE_WIDTH_MAX,
   OUTLINE_WIDTH_MIN,
   OUTLINE_WIDTH_STEP,
@@ -108,65 +105,26 @@ export const Sidebar = () => {
 
       <div className="flex flex-col gap-5 overflow-y-auto">
         <Section title="Colors">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <Label id="lightness-label">Lightness</Label>
-              <span className="text-xs">{lightness}</span>
-            </div>
-            <Slider
-              aria-labelledby="lightness-label"
-              value={[lightness]}
-              onValueChange={(value) => setLightness(value[0])}
-              min={LIGHTNESS_MIN}
-              max={LIGHTNESS_MAX}
-              step={LIGHTNESS_STEP}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <Label id="lightness-variance-label">Lightness Variance</Label>
-              <span className="text-xs">{lightnessVariance}</span>
-            </div>
-            <Slider
-              aria-labelledby="lightness-variance-label"
-              value={[lightnessVariance]}
-              onValueChange={(value) => setLightnessVariance(value[0])}
-              min={LIGHTNESS_VARIANCE_MIN}
-              max={LIGHTNESS_VARIANCE_MAX}
-              step={LIGHTNESS_STEP}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <Label id="chroma-label">Chroma</Label>
-              <span className="text-xs">{chroma}</span>
-            </div>
-            <Slider
-              aria-labelledby="chroma-label"
-              value={[chroma]}
-              onValueChange={(value) => setChroma(value[0])}
-              min={CHROMA_MIN}
-              max={CHROMA_MAX}
-              step={CHROMA_STEP}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <Label id="chroma-variance-label">Chroma Variance</Label>
-              <span className="text-xs">{chromaVariance}</span>
-            </div>
-            <Slider
-              aria-labelledby="chroma-variance-label"
-              value={[chromaVariance]}
-              onValueChange={(value) => setChromaVariance(value[0])}
-              min={CHROMA_VARIANCE_MIN}
-              max={CHROMA_VARIANCE_MAX}
-              step={CHROMA_STEP}
-            />
-          </div>
+          <CompoundSliderGroup
+            name="Lightness"
+            baseValue={lightness}
+            onBaseChange={setLightness}
+            varianceValue={lightnessVariance}
+            onVarianceChange={setLightnessVariance}
+            min={LIGHTNESS_MIN}
+            max={LIGHTNESS_MAX}
+            step={LIGHTNESS_STEP}
+          />
+          <CompoundSliderGroup
+            name="Chroma"
+            baseValue={chroma}
+            onBaseChange={setChroma}
+            varianceValue={chromaVariance}
+            onVarianceChange={setChromaVariance}
+            min={CHROMA_MIN}
+            max={CHROMA_MAX}
+            step={CHROMA_STEP}
+          />
 
           <Button size="sm" variant="outline" onClick={randomizeColors}>
             <ShuffleIcon /> Randomize Colors
