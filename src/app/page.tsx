@@ -2,7 +2,7 @@ import { randomSeed } from '@/math'
 import { loadSearchParams } from '@/search-params'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import Client from './client'
+import { App } from './app'
 
 export const metadata: Metadata = {
   title: 'Developer DAO Logo Playground',
@@ -20,5 +20,5 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
     redirect(`?${u.toString()}`)
   }
 
-  return <Client />
+  return <App />
 }
