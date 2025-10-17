@@ -42,9 +42,9 @@ const Section = ({
   title: string
 }) => {
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-5">
       <h3 className="text-lg">{title}</h3>
-      <div className="flex flex-col gap-3">{children}</div>
+      <div className="flex flex-col gap-4">{children}</div>
     </section>
   )
 }
@@ -103,7 +103,7 @@ export const Sidebar = () => {
         </Button>
       </header>
 
-      <div className="flex flex-col gap-5 overflow-y-auto">
+      <div className="flex flex-col gap-6 overflow-y-auto">
         <Section title="Colors">
           <CompoundSliderGroup
             name="Lightness"
