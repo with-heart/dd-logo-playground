@@ -4,11 +4,38 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { App } from './app'
 
-export const metadata: Metadata = {
-  title: 'Developer DAO Logo Playground',
-  description:
-    'Generate fun, colorful background patterns for the Developer DAO logo',
-  icons: { icon: '/favicon.ico' },
+export async function generateMetadata({
+  searchParams,
+}: PageProps<'/'>): Promise<Metadata> {
+  // Build a query string preserving array params
+  const qs = new URLSearchParams()
+  if (searchParams) {
+    for (const [key, value] of Object.entries(searchParams)) {
+      if (Array.isArray(value)) {
+        for (const v of value) {
+          if (v != null) qs.append(key, String(v))
+        }
+      } else if (value != null) {
+        qs.set(key, String(value))
+      }
+    }
+  }
+
+  const ogUrl = `/api/og${qs.toString() ? `?${qs.toString()}` : ''}`
+
+  return {
+    title: 'Developer DAO Logo Playground',
+    description:
+      'Generate fun, colorful background patterns for the Developer DAO logo',
+    icons: { icon: '/favicon.ico' },
+    openGraph: {
+      images: [{ url: ogUrl }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogUrl],
+    },
+  }
 }
 
 export default async function Page({ searchParams }: PageProps<'/'>) {
