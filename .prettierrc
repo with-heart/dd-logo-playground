@@ -7,5 +7,8 @@
     "prettier-plugin-organize-imports",
     "prettier-plugin-jsdoc",
     "prettier-plugin-tailwindcss"
-  ]
+  ],
+  "tailwindConfig": "./src/styles/globals.css",
+  "tailwindAttributes": ["className", "tw"],
+  "tailwindFunctions": ["cn"]
 }
