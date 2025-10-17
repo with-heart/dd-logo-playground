@@ -43,8 +43,8 @@ export const LogoSVG = ({
       role="img"
       aria-label="Developer DAO Logo"
       style={{
-        width: '500px',
-        height: '500px',
+        width: '600px',
+        height: '600px',
       }}
     >
       <defs>
