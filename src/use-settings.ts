@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { clamp, rand, randomSeed } from './math'
 import { useSearchParams } from './search-params'
 
@@ -16,7 +16,9 @@ export interface SettingsProperties {
 }
 
 export interface SettingsActions {
+  randomizeChroma: () => void
   randomizeColors: () => void
+  randomizeLightness: () => void
   regenerateImage: () => void
   setChroma: (chroma: number) => void
   setChromaVariance: (chromaVariance: number) => void
@@ -39,24 +41,27 @@ export const useSettings = (): UrlSettings => {
   const lightnessVariance = clamp(query.lightnessVariance, 0, 1)
   const strokeWidth = clamp(query.strokeWidth ?? 0.05, 0, 10)
 
+  const randomizeChroma = useCallback(() => {
+    setQuery({
+      chroma: Number(rand(0, 0.4).toFixed(2)),
+      chromaVariance: Number(rand(0, 0.4).toFixed(2)),
+    })
+  }, [setQuery])
+  const randomizeLightness = useCallback(() => {
+    setQuery({
+      lightness: Number(rand(0, 1).toFixed(2)),
+      lightnessVariance: Number(rand(0, 1).toFixed(2)),
+    })
+  }, [setQuery])
+
   const actions = useMemo<SettingsActions>(
     () => ({
+      randomizeChroma,
       randomizeColors: () => {
-        const l = rand(0, 1)
-        const c = rand(0, 0.4)
-        const lvMax = Math.min(0.3, l, 1 - l)
-        const cvMax = Math.min(0.2, c, 0.45 - c)
-        const lv = clamp(rand(0.01, Math.max(0.01, lvMax)), 0, lvMax)
-        const cv = clamp(rand(0.01, Math.max(0.01, cvMax)), 0, cvMax)
-
-        setQuery({
-          chroma: Number(c.toFixed(2)),
-          chromaVariance: Number(cv.toFixed(2)),
-          lightness: Number(l.toFixed(2)),
-          lightnessVariance: Number(lv.toFixed(2)),
-          seed: randomSeed(),
-        })
+        randomizeChroma()
+        randomizeLightness()
       },
+      randomizeLightness,
       regenerateImage: () => setQuery({ seed: randomSeed() }),
       setChroma: (chroma: number) =>
         setQuery({ chroma }, { history: 'replace' }),
@@ -73,7 +78,7 @@ export const useSettings = (): UrlSettings => {
       setVerticalHexagons: (verticalHexagons: boolean) =>
         setQuery({ verticalHexagons }, { history: 'replace' }),
     }),
-    [setQuery],
+    [setQuery, randomizeChroma, randomizeLightness],
   )
 
   return {

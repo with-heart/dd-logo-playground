@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
-import { DownloadIcon, RotateCcwIcon, ShuffleIcon } from 'lucide-react'
+import { DicesIcon, DownloadIcon, RotateCcwIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { CompoundSliderGroup } from './components/compound-slider-group'
 import {
@@ -67,7 +67,9 @@ export const Sidebar = () => {
     setChroma,
     chromaVariance,
     setChromaVariance,
+    randomizeChroma,
     randomizeColors,
+    randomizeLightness,
   } = useSettings()
 
   return (
@@ -89,7 +91,17 @@ export const Sidebar = () => {
             min={LIGHTNESS_MIN}
             max={LIGHTNESS_MAX}
             step={LIGHTNESS_STEP}
-          />
+          >
+            <Button
+              size="icon-sm"
+              variant="outline"
+              title="Randomize lightness"
+              onClick={randomizeLightness}
+            >
+              <DicesIcon />
+            </Button>
+          </CompoundSliderGroup>
+
           <CompoundSliderGroup
             name="Chroma"
             baseValue={chroma}
@@ -99,10 +111,19 @@ export const Sidebar = () => {
             min={CHROMA_MIN}
             max={CHROMA_MAX}
             step={CHROMA_STEP}
-          />
+          >
+            <Button
+              size="icon-sm"
+              variant="outline"
+              title="Randomize chroma"
+              onClick={randomizeChroma}
+            >
+              <DicesIcon />
+            </Button>
+          </CompoundSliderGroup>
 
           <Button size="sm" variant="outline" onClick={randomizeColors}>
-            <ShuffleIcon /> Randomize Colors
+            <DicesIcon /> Randomize Lightness & Chroma
           </Button>
         </Section>
 

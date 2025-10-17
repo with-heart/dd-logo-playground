@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Label } from './ui/label'
 import { Slider } from './ui/slider'
 
@@ -10,6 +11,7 @@ export interface CompoundSliderGroupProps {
   onBaseChange: (base: number) => void
   varianceValue: number
   onVarianceChange: (variance: number) => void
+  children?: ReactNode
 }
 
 export const CompoundSliderGroup = ({
@@ -21,9 +23,10 @@ export const CompoundSliderGroup = ({
   onBaseChange,
   varianceValue,
   onVarianceChange,
+  children,
 }: CompoundSliderGroupProps) => {
   return (
-    <fieldset className="flex flex-col gap-3 rounded-sm border border-zinc-600 p-3">
+    <fieldset className="group flex flex-col gap-3 rounded-sm border border-zinc-600 p-3">
       <legend>{name}</legend>
 
       <div className="flex flex-col gap-2">
@@ -54,8 +57,11 @@ export const CompoundSliderGroup = ({
         />
       </div>
 
-      <div className="text-sm">
-        = {baseValue.toFixed(2)} ± {varianceValue.toFixed(2)}
+      <div className="flex items-center justify-between">
+        <div className="text-sm">
+          = {baseValue.toFixed(2)} ± {varianceValue.toFixed(2)}
+        </div>
+        {children}
       </div>
     </fieldset>
   )
