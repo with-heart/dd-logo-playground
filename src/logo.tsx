@@ -1,38 +1,15 @@
-import { generateOklchColors } from './colors/generate-colors'
-import { oklchToRgb } from './colors/oklch-to-rgb'
-import { deriveStrokeRgb } from './colors/stroke-utils'
+import { useId } from 'react'
+import { deriveStroke } from './colors/stroke-utils'
 import { CIRCLE_CENTER_X, CIRCLE_CENTER_Y, CIRCLE_RADIUS } from './constants'
-import { buildHexGrid } from './geometry/build-hex-grid'
-import { mulberry32 } from './math'
-import type { SettingsProperties } from './use-settings'
+import { useHexColors } from './use-hex-colors'
+import { useHexGeometry } from './use-hex-geometry'
+import { useSettings } from './use-settings'
 
-export const LogoSVG = ({
-  chroma,
-  chromaVariance,
-  lightness,
-  lightnessVariance,
-  seed,
-  strokeWidth,
-  verticalHexagons,
-}: SettingsProperties) => {
-  const geometry = buildHexGrid({
-    centerX: CIRCLE_CENTER_X,
-    centerY: CIRCLE_CENTER_Y,
-    circleRadius: CIRCLE_RADIUS,
-    hexRadius: 1.2,
-    vertical: verticalHexagons,
-  })
-  const rng = mulberry32(seed || 1)
-  const colors = generateOklchColors(
-    geometry.cells.length,
-    {
-      lightness,
-      chroma,
-      lightnessVariance,
-      chromaVariance,
-    },
-    rng,
-  )
+export const Logo = () => {
+  const { strokeWidth } = useSettings()
+  const geometry = useHexGeometry()
+  const colors = useHexColors(geometry.cells.length)
+  const clipPathId = useId()
 
   return (
     <svg
@@ -40,29 +17,25 @@ export const LogoSVG = ({
       viewBox="0 0 33 34"
       fill="none"
       preserveAspectRatio="xMidYMid meet"
-      role="img"
-      aria-label="Developer DAO Logo"
-      style={{
-        width: '500px',
-        height: '500px',
-      }}
     >
+      <title>Developer DAO Logo</title>
+
       <defs>
-        <clipPath id="clipPath">
+        <clipPath id={clipPathId}>
           <circle cx={CIRCLE_CENTER_X} cy={CIRCLE_CENTER_Y} r={CIRCLE_RADIUS} />
         </clipPath>
       </defs>
 
-      <g clipPath={`url(#clipPath)`}>
+      <g clipPath={`url(#${clipPathId})`}>
         {geometry.cells.map((cell) => {
           const color = colors[cell.id]
           return (
             <g key={cell.id}>
-              <path d={cell.path} fill={oklchToRgb(color).fill} />
+              <path d={cell.path} fill={color.fill} />
               {cell.vertices.map((v, i) => {
                 const next = cell.vertices[(i + 1) % 6]
                 const nId = cell.neighbors[i]
-                const stroke = deriveStrokeRgb(
+                const stroke = deriveStroke(
                   color,
                   nId >= 0 ? colors[nId] : null,
                 )

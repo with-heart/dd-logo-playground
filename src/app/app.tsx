@@ -1,5 +1,5 @@
 'use client'
-import { Logo } from '@/logo.svg'
+import { Logo } from '@/logo'
 import { Sidebar } from '../sidebar'
 
 export function App() {
@@ -17,7 +17,7 @@ export function App() {
       <aside className="flex flex-col overflow-y-hidden [grid-area:_sidebar] *:p-4">
         <Sidebar />
       </aside>
-      <footer className="font-pixel px-4 py-2 text-center text-2xl [grid-area:_footer]">
+      <footer className="px-4 py-2 text-center font-pixel text-2xl [grid-area:_footer]">
         made with heart by{' '}
         <a
           href="https://github.com/with-heart"
