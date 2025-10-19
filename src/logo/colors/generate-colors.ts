@@ -1,5 +1,5 @@
-import { clamp } from '../math'
-import type { ColorValues } from '../types'
+import { clamp } from '../../math'
+import type { ColorValues } from '../../types'
 
 export interface OklchColor {
   l: number

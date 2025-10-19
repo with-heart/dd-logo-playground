@@ -1,5 +1,5 @@
 'use client'
-import { Logo } from '@/logo'
+import { Logo } from '@/logo/client'
 import { Sidebar } from '../sidebar'
 
 export function App() {

@@ -1,9 +1,9 @@
 import type { CSSProperties } from 'react'
+import { useSettings } from '../use-settings'
+import { LogoBase } from './base'
 import { deriveStroke } from './colors/stroke-utils'
-import { LogoBase } from './logo.base'
 import { useHexColors } from './use-hex-colors'
 import { useHexGeometry } from './use-hex-geometry'
-import { useSettings } from './use-settings'
 
 export const Logo = ({ style }: { style?: CSSProperties }) => {
   const { strokeWidth } = useSettings()

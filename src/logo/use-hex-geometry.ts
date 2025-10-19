@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import { CIRCLE_CENTER_X, CIRCLE_CENTER_Y, CIRCLE_RADIUS } from './constants'
+import { CIRCLE_CENTER_X, CIRCLE_CENTER_Y, CIRCLE_RADIUS } from '../constants'
+import { useSettings } from '../use-settings'
 import { buildHexGrid } from './geometry/build-hex-grid'
-import { useSettings } from './use-settings'
 
 export const useHexGeometry = () => {
   const { verticalHexagons } = useSettings()

@@ -1,4 +1,4 @@
-interface HexCell {
+export interface HexCell {
   id: number
   row: number
   col: number
@@ -9,7 +9,7 @@ interface HexCell {
   neighbors: number[] // length 6, -1 when no neighbor
 }
 
-interface HexGrid {
+export interface HexGrid {
   cells: HexCell[]
 }
 

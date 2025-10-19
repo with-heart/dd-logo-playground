@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
+import { mulberry32 } from '../math'
+import { useSettings } from '../use-settings'
 import { generateOklchColors } from './colors/generate-colors'
-import { mulberry32 } from './math'
-import { useSettings } from './use-settings'
 
 export const useHexColors = (count: number) => {
   const { chroma, chromaVariance, lightness, lightnessVariance, seed } =

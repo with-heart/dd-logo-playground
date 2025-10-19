@@ -1,5 +1,5 @@
+import { CIRCLE_CENTER_X, CIRCLE_CENTER_Y, CIRCLE_RADIUS } from '@/constants'
 import type { ComponentProps } from 'react'
-import { CIRCLE_CENTER_X, CIRCLE_CENTER_Y, CIRCLE_RADIUS } from './constants'
 
 export const LogoBase = ({ children, ...props }: ComponentProps<'svg'>) => {
   return (
