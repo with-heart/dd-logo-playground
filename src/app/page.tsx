@@ -7,10 +7,12 @@ import { App } from './app'
 export async function generateMetadata({
   searchParams,
 }: PageProps<'/'>): Promise<Metadata> {
+  const params = await searchParams
+
   // Build a query string preserving array params
   const qs = new URLSearchParams()
-  if (searchParams) {
-    for (const [key, value] of Object.entries(searchParams)) {
+  if (params) {
+    for (const [key, value] of Object.entries(params)) {
       if (Array.isArray(value)) {
         for (const v of value) {
           if (v != null) qs.append(key, String(v))
