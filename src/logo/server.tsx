@@ -7,6 +7,7 @@ import { generateOklchColors } from './colors/generate-colors'
 import { oklchToRgb } from './colors/oklch-to-rgb'
 import { deriveStrokeRgb } from './colors/stroke-utils'
 import { buildHexGrid } from './geometry/build-hex-grid'
+import { HexagonPattern } from './patterns/hex'
 
 export const Logo = ({
   settings: {
@@ -43,30 +44,12 @@ export const Logo = ({
 
   return (
     <LogoBase {...props}>
-      {geometry.cells.map((cell) => {
-        const color = colors[cell.id]
-        return (
-          <g key={cell.id}>
-            <path d={cell.path} fill={oklchToRgb(color).fill} />
-            {cell.vertices.map((v, i) => {
-              const next = cell.vertices[(i + 1) % 6]
-              const nId = cell.neighbors[i]
-              const stroke = deriveStrokeRgb(
-                color,
-                nId >= 0 ? colors[nId] : null,
-              )
-              return (
-                <path
-                  key={`${cell.id}-${i}`}
-                  d={`M ${v[0]} ${v[1]} L ${next[0]} ${next[1]}`}
-                  stroke={stroke}
-                  strokeWidth={strokeWidth}
-                  fill="none"
-                />
-              )
-            })}
-          </g>
-        )
+      {HexagonPattern({
+        geometry: geometry,
+        colors: colors,
+        strokeWidth: strokeWidth,
+        toFill: (c) => oklchToRgb(c).fill,
+        deriveStroke: (a, b) => deriveStrokeRgb(a, b),
       })}
     </LogoBase>
   )
