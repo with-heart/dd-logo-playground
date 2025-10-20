@@ -1,11 +1,5 @@
 import { useMemo } from 'react'
-import {
-  CIRCLE_CENTER_X,
-  CIRCLE_CENTER_Y,
-  CIRCLE_RADIUS,
-  HEX_RADIUS,
-  TRIANGLE_SIDE,
-} from '../constants'
+import { HEX_RADIUS, TRIANGLE_SIDE } from '../constants'
 import { useSettings } from '../use-settings'
 import { buildHexGrid, type HexGrid } from './geometry/build-hex-grid'
 import {
@@ -25,9 +19,6 @@ export const useGeometry = () => {
       return {
         kind: 'triangle',
         grid: buildTriangleGrid({
-          centerX: CIRCLE_CENTER_X,
-          centerY: CIRCLE_CENTER_Y,
-          circleRadius: CIRCLE_RADIUS,
           triangleSide: TRIANGLE_SIDE,
         }),
       }
@@ -36,9 +27,6 @@ export const useGeometry = () => {
     return {
       kind: 'hexagon',
       grid: buildHexGrid({
-        centerX: CIRCLE_CENTER_X,
-        centerY: CIRCLE_CENTER_Y,
-        circleRadius: CIRCLE_RADIUS,
         hexRadius: HEX_RADIUS,
         vertical: verticalHexagons,
       }),

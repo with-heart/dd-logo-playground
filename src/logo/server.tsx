@@ -1,10 +1,4 @@
-import {
-  CIRCLE_CENTER_X,
-  CIRCLE_CENTER_Y,
-  CIRCLE_RADIUS,
-  HEX_RADIUS,
-  TRIANGLE_SIDE,
-} from '@/constants'
+import { HEX_RADIUS, TRIANGLE_SIDE } from '@/constants'
 import { mulberry32 } from '@/math'
 import type { SettingsProperties } from '@/use-settings'
 import type { ComponentProps } from 'react'
@@ -34,15 +28,9 @@ export const Logo = ({
   const geometry =
     pattern === 'triangle' ?
       buildTriangleGrid({
-        centerX: CIRCLE_CENTER_X,
-        centerY: CIRCLE_CENTER_Y,
-        circleRadius: CIRCLE_RADIUS,
         triangleSide: TRIANGLE_SIDE,
       })
     : buildHexGrid({
-        centerX: CIRCLE_CENTER_X,
-        centerY: CIRCLE_CENTER_Y,
-        circleRadius: CIRCLE_RADIUS,
         hexRadius: HEX_RADIUS,
         vertical: verticalHexagons,
       })

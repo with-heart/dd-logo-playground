@@ -1,3 +1,4 @@
+import { CIRCLE_CENTER_X, CIRCLE_CENTER_Y, CIRCLE_RADIUS } from '@/constants'
 import type { Cell, Grid } from './types'
 
 export interface TriangleCell extends Cell {
@@ -11,9 +12,6 @@ export interface TriangleCell extends Cell {
 export type TriangleGrid = Grid<TriangleCell>
 
 export interface BuildTriangleGridOptions {
-  centerX: number
-  centerY: number
-  circleRadius: number
   triangleSide: number
 }
 
@@ -21,9 +19,6 @@ export interface BuildTriangleGridOptions {
 // triangles share edges exactly. We index a grid with step dx = s/2, dy = h/2
 // and alternate up/down with (row+col)%2.
 export function buildTriangleGrid({
-  centerX,
-  centerY,
-  circleRadius,
   triangleSide,
 }: BuildTriangleGridOptions): TriangleGrid {
   const s = triangleSide
@@ -36,7 +31,7 @@ export function buildTriangleGrid({
   const by = h
 
   // Conservative range so the circle is fully covered; add a small buffer
-  const gridRadius = circleRadius + s
+  const gridRadius = CIRCLE_RADIUS + s
   const iMax = Math.ceil((2 * gridRadius) / s) + 1
   const jMax = Math.ceil((2 * gridRadius) / h) + 1
 
@@ -72,8 +67,8 @@ export function buildTriangleGrid({
   // Generate triangles from parallelograms
   for (let j = -jMax; j <= jMax; j++) {
     for (let i = -iMax; i <= iMax; i++) {
-      const p0x = centerX + i * ax + j * bx
-      const p0y = centerY + i * ay + j * by
+      const p0x = CIRCLE_CENTER_X + i * ax + j * bx
+      const p0y = CIRCLE_CENTER_Y + i * ay + j * by
       const p1x = p0x + ax
       const p1y = p0y + ay
       const p2x = p0x + bx

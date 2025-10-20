@@ -1,3 +1,4 @@
+import { CIRCLE_CENTER_X, CIRCLE_CENTER_Y, CIRCLE_RADIUS } from '@/constants'
 import type { Cell, Grid } from './types'
 
 export interface HexCell extends Cell {
@@ -10,17 +11,11 @@ export interface HexCell extends Cell {
 export type HexGrid = Grid<HexCell>
 
 export interface BuildGridOptions {
-  centerX: number
-  centerY: number
-  circleRadius: number
   hexRadius: number
   vertical: boolean
 }
 
 export function buildHexGrid({
-  centerX,
-  centerY,
-  circleRadius,
   hexRadius,
   vertical,
 }: BuildGridOptions): HexGrid {
@@ -40,7 +35,7 @@ export function buildHexGrid({
     verticalSpacing = hexHeight
   }
 
-  const gridRadius = circleRadius + hexRadius
+  const gridRadius = CIRCLE_RADIUS + hexRadius
   const rows = Math.ceil((2 * gridRadius) / verticalSpacing)
   const cols = Math.ceil((2 * gridRadius) / horizontalSpacing)
 
@@ -55,17 +50,20 @@ export function buildHexGrid({
       let cy: number
       if (vertical) {
         cx =
-          centerX +
+          CIRCLE_CENTER_X +
           col * horizontalSpacing +
           (row % 2) * (horizontalSpacing / 2)
-        cy = centerY + row * verticalSpacing
+        cy = CIRCLE_CENTER_Y + row * verticalSpacing
       } else {
-        cx = centerX + col * horizontalSpacing
-        cy = centerY + row * verticalSpacing + (col % 2) * (verticalSpacing / 2)
+        cx = CIRCLE_CENTER_X + col * horizontalSpacing
+        cy =
+          CIRCLE_CENTER_Y +
+          row * verticalSpacing +
+          (col % 2) * (verticalSpacing / 2)
       }
 
-      const dist = Math.hypot(cx - centerX, cy - centerY)
-      if (dist > circleRadius + hexRadius) continue
+      const dist = Math.hypot(cx - CIRCLE_CENTER_X, cy - CIRCLE_CENTER_Y)
+      if (dist > CIRCLE_RADIUS + hexRadius) continue
 
       const vertices: [number, number][] = []
       for (let i = 0; i < 6; i++) {
