@@ -13,6 +13,9 @@ import { DicesIcon, DownloadIcon, RotateCcwIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { CompoundSliderGroup } from './components/compound-slider-group'
 import {
+  CELL_SIZE_MAX,
+  CELL_SIZE_MIN,
+  CELL_SIZE_STEP,
   CHROMA_MAX,
   CHROMA_MIN,
   CHROMA_STEP,
@@ -70,6 +73,8 @@ export const Sidebar = () => {
     randomizeChroma,
     randomizeColors,
     randomizeLightness,
+    cellSize,
+    setCellSize,
   } = useSettings()
 
   return (
@@ -156,6 +161,21 @@ export const Sidebar = () => {
               </Label>
             </div>
           )}
+
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline justify-between">
+              <Label id="cell-size-label">Cell Size</Label>
+              <span className="text-xs">{cellSize.toFixed(2)}x</span>
+            </div>
+            <Slider
+              aria-labelledby="cell-size-label"
+              value={[cellSize]}
+              onValueChange={(value) => setCellSize(value[0])}
+              min={CELL_SIZE_MIN}
+              max={CELL_SIZE_MAX}
+              step={CELL_SIZE_STEP}
+            />
+          </div>
 
           <div className="flex flex-col gap-2">
             <div className="flex items-baseline justify-between">

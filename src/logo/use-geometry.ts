@@ -12,14 +12,14 @@ export type Geometry =
   | { kind: 'triangle'; grid: TriangleGrid }
 
 export const useGeometry = () => {
-  const { verticalHexagons, pattern } = useSettings()
+  const { verticalHexagons, pattern, cellSize } = useSettings()
 
   return useMemo<Geometry>(() => {
     if (pattern === 'triangle') {
       return {
         kind: 'triangle',
         grid: buildTriangleGrid({
-          triangleSide: GRID_TRIANGLE_BASE_SIDE,
+          triangleSide: GRID_TRIANGLE_BASE_SIDE * cellSize,
         }),
       }
     }
@@ -27,9 +27,9 @@ export const useGeometry = () => {
     return {
       kind: 'hexagon',
       grid: buildHexGrid({
-        hexRadius: GRID_HEX_BASE_RADIUS,
+        hexRadius: GRID_HEX_BASE_RADIUS * cellSize,
         vertical: verticalHexagons,
       }),
     }
-  }, [pattern, verticalHexagons])
+  }, [pattern, verticalHexagons, cellSize])
 }

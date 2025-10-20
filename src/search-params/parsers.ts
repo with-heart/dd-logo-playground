@@ -25,6 +25,7 @@ export const urlSearchParamsParsers = {
   verticalHexagons: parseAsBoolean
     .withDefault(true)
     .withOptions({ history: 'replace' }),
+  cellSize: parseAsFloat.withDefault(1).withOptions({ history: 'replace' }),
 }
 
 export const urlSearchParamsUrlKeys: UrlKeys<typeof urlSearchParamsParsers> = {
@@ -36,4 +37,5 @@ export const urlSearchParamsUrlKeys: UrlKeys<typeof urlSearchParamsParsers> = {
   lightnessVariance: 'lv',
   strokeWidth: 'sw',
   verticalHexagons: 'v',
+  cellSize: 'cs',
 }

@@ -13,6 +13,7 @@ export interface SettingsProperties {
   seed: number
   strokeWidth: number
   verticalHexagons: boolean
+  cellSize: number
 }
 
 export interface SettingsActions {
@@ -28,6 +29,7 @@ export interface SettingsActions {
   setSeed: (seed: number) => void
   setStrokeWidth: (strokeWidth: number) => void
   setVerticalHexagons: (verticalHexagons: boolean) => void
+  setCellSize: (cellSize: number) => void
 }
 
 export type UrlSettings = SettingsProperties & SettingsActions
@@ -40,6 +42,7 @@ export const useSettings = (): UrlSettings => {
   const lightness = clamp(query.lightness, 0, 1)
   const lightnessVariance = clamp(query.lightnessVariance, 0, 1)
   const strokeWidth = clamp(query.strokeWidth ?? 0.05, 0, 10)
+  const cellSize = clamp(query.cellSize ?? 1, 0.25, 2)
 
   const randomizeChroma = useCallback(() => {
     setQuery({
@@ -77,6 +80,8 @@ export const useSettings = (): UrlSettings => {
         setQuery({ strokeWidth }, { history: 'replace' }),
       setVerticalHexagons: (verticalHexagons: boolean) =>
         setQuery({ verticalHexagons }, { history: 'replace' }),
+      setCellSize: (cellSize: number) =>
+        setQuery({ cellSize }, { history: 'replace' }),
     }),
     [setQuery, randomizeChroma, randomizeLightness],
   )
@@ -91,6 +96,7 @@ export const useSettings = (): UrlSettings => {
     seed: query.seed!,
     strokeWidth,
     verticalHexagons: query.verticalHexagons,
+    cellSize,
     ...actions,
   }
 }

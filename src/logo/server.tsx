@@ -20,6 +20,7 @@ export const Logo = ({
     verticalHexagons,
     strokeWidth,
     pattern,
+    cellSize,
   },
   ...props
 }: ComponentProps<'svg'> & {
@@ -28,10 +29,10 @@ export const Logo = ({
   const geometry =
     pattern === 'triangle' ?
       buildTriangleGrid({
-        triangleSide: GRID_TRIANGLE_BASE_SIDE,
+        triangleSide: GRID_TRIANGLE_BASE_SIDE * cellSize,
       })
     : buildHexGrid({
-        hexRadius: GRID_HEX_BASE_RADIUS,
+        hexRadius: GRID_HEX_BASE_RADIUS * cellSize,
         vertical: verticalHexagons,
       })
   const rng = mulberry32(seed || 1)
