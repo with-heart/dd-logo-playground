@@ -17,3 +17,6 @@ export const OUTLINE_WIDTH_STEP = 0.01
 export const CIRCLE_CENTER_X = 16.29
 export const CIRCLE_CENTER_Y = 16.685
 export const CIRCLE_RADIUS = 16.29
+
+export const HEX_RADIUS = 1.2
+export const TRIANGLE_SIDE = 2.5
