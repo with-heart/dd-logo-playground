@@ -72,13 +72,6 @@ export const Sidebar = () => {
     randomizeLightness,
   } = useSettings()
 
-  const onChangePattern = (p: Pattern) => {
-    setPattern(p)
-    // When switching away from hexagon, verticalHexagons has no effect; keep it but could reset if desired
-    // If you prefer, uncomment next line to always set default
-    // if (p !== 'hexagon') setVerticalHexagons(true)
-  }
-
   return (
     <>
       <header>
@@ -139,7 +132,7 @@ export const Sidebar = () => {
             <Label htmlFor="pattern">Pattern</Label>
             <Select
               value={pattern}
-              onValueChange={(v) => onChangePattern(v as Pattern)}
+              onValueChange={(v) => setPattern(v as Pattern)}
             >
               <SelectTrigger id="pattern" className="w-full">
                 <SelectValue />
