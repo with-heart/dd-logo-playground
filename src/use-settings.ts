@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { clamp, rand, randomSeed } from './math'
 import { useSearchParams } from './search-params'
 
-export type Pattern = 'hexagon'
+export type Pattern = 'hexagon' | 'triangle'
 
 export interface SettingsProperties {
   chroma: number

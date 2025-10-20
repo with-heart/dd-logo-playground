@@ -8,7 +8,9 @@ import {
 
 export const urlSearchParamsParsers = {
   seed: parseAsInteger,
-  pattern: parseAsStringEnum(['hexagon'] as const).withDefault('hexagon'),
+  pattern: parseAsStringEnum(['hexagon', 'triangle'] as const).withDefault(
+    'hexagon',
+  ),
   chroma: parseAsFloat.withDefault(0.3).withOptions({ history: 'replace' }),
   chromaVariance: parseAsFloat
     .withDefault(0.05)

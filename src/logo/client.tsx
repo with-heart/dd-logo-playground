@@ -1,24 +1,24 @@
+import { Pattern } from '@/logo/pattern'
+import { useGeometry } from '@/logo/use-geometry'
 import type { ComponentProps } from 'react'
 import { useSettings } from '../use-settings'
 import { LogoBase } from './base'
 import { deriveStroke } from './colors/stroke-utils'
-import { HexagonPattern } from './patterns/hex'
 import { useHexColors } from './use-hex-colors'
-import { useHexGeometry } from './use-hex-geometry'
 
 export const Logo = (props: ComponentProps<'svg'>) => {
   const { strokeWidth } = useSettings()
-  const geometry = useHexGeometry()
-  const colors = useHexColors(geometry.cells.length)
+  const geometry = useGeometry()
+  const colors = useHexColors(geometry.grid.cells.length)
 
   return (
     <LogoBase {...props}>
-      <HexagonPattern
-        geometry={geometry}
+      <Pattern
+        geometry={geometry.grid}
         colors={colors}
         strokeWidth={strokeWidth}
         toFill={(c) => c.fill}
-        deriveStroke={(a, b) => deriveStroke(a, b)}
+        deriveStroke={deriveStroke}
       />
     </LogoBase>
   )

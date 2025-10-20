@@ -24,7 +24,7 @@ import {
   OUTLINE_WIDTH_STEP,
 } from './constants'
 import { useExport } from './exports'
-import { useSettings } from './use-settings'
+import { useSettings, type Pattern } from './use-settings'
 
 const Section = ({
   children,
@@ -71,6 +71,13 @@ export const Sidebar = () => {
     randomizeColors,
     randomizeLightness,
   } = useSettings()
+
+  const onChangePattern = (p: Pattern) => {
+    setPattern(p)
+    // When switching away from hexagon, verticalHexagons has no effect; keep it but could reset if desired
+    // If you prefer, uncomment next line to always set default
+    // if (p !== 'hexagon') setVerticalHexagons(true)
+  }
 
   return (
     <>
@@ -130,26 +137,32 @@ export const Sidebar = () => {
         <Section title="Tiling">
           <div className="flex flex-col gap-2">
             <Label htmlFor="pattern">Pattern</Label>
-            <Select value={pattern} onValueChange={setPattern}>
+            <Select
+              value={pattern}
+              onValueChange={(v) => onChangePattern(v as Pattern)}
+            >
               <SelectTrigger id="pattern" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent id="pattern">
                 <SelectItem value="hexagon">Hexagon</SelectItem>
+                <SelectItem value="triangle">Triangle</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Switch
-              id="vertical-hexagons"
-              checked={verticalHexagons}
-              onCheckedChange={setVerticalHexagons}
-            />
-            <Label htmlFor="vertical-hexagons">
-              Vertical hexagons (pointy top)
-            </Label>
-          </div>
+          {pattern === 'hexagon' && (
+            <div className="flex items-center gap-2">
+              <Switch
+                id="vertical-hexagons"
+                checked={verticalHexagons}
+                onCheckedChange={setVerticalHexagons}
+              />
+              <Label htmlFor="vertical-hexagons">
+                Vertical hexagons (pointy top)
+              </Label>
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             <div className="flex items-baseline justify-between">

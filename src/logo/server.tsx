@@ -7,7 +7,8 @@ import { generateOklchColors } from './colors/generate-colors'
 import { oklchToRgb } from './colors/oklch-to-rgb'
 import { deriveStrokeRgb } from './colors/stroke-utils'
 import { buildHexGrid } from './geometry/build-hex-grid'
-import { HexagonPattern } from './patterns/hex'
+import { buildTriangleGrid } from './geometry/build-triangle-grid'
+import { Pattern } from './pattern'
 
 export const Logo = ({
   settings: {
@@ -18,18 +19,27 @@ export const Logo = ({
     seed,
     verticalHexagons,
     strokeWidth,
+    pattern,
   },
   ...props
 }: ComponentProps<'svg'> & {
   settings: SettingsProperties
 }) => {
-  const geometry = buildHexGrid({
-    centerX: CIRCLE_CENTER_X,
-    centerY: CIRCLE_CENTER_Y,
-    circleRadius: CIRCLE_RADIUS,
-    hexRadius: 1.2,
-    vertical: verticalHexagons,
-  })
+  const geometry =
+    pattern === 'triangle' ?
+      buildTriangleGrid({
+        centerX: CIRCLE_CENTER_X,
+        centerY: CIRCLE_CENTER_Y,
+        circleRadius: CIRCLE_RADIUS,
+        triangleSide: 2.0,
+      })
+    : buildHexGrid({
+        centerX: CIRCLE_CENTER_X,
+        centerY: CIRCLE_CENTER_Y,
+        circleRadius: CIRCLE_RADIUS,
+        hexRadius: 1.2,
+        vertical: verticalHexagons,
+      })
   const rng = mulberry32(seed || 1)
   const colors = generateOklchColors(
     geometry.cells.length,
@@ -44,9 +54,9 @@ export const Logo = ({
 
   return (
     <LogoBase {...props}>
-      {HexagonPattern({
-        geometry: geometry,
-        colors: colors,
+      {Pattern({
+        geometry,
+        colors,
         strokeWidth: strokeWidth,
         toFill: (c) => oklchToRgb(c).fill,
         deriveStroke: (a, b) => deriveStrokeRgb(a, b),
