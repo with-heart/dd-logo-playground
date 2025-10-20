@@ -115,10 +115,13 @@ export function buildVoronoiGrid({
     if (!verts || verts.length < 3) continue
     const id = idMap.get(i)
     if (id == null) continue
-  // Path: M x0 y0 L x1 y1 ...
-  const [v0x, v0y] = verts[0]
-  const rest = verts.slice(1).map((v) => `L ${v[0]} ${v[1]}`).join(' ')
-  const path = `M ${v0x} ${v0y} ${rest} Z`
+    // Path: M x0 y0 L x1 y1 ...
+    const [v0x, v0y] = verts[0]
+    const rest = verts
+      .slice(1)
+      .map((v) => `L ${v[0]} ${v[1]}`)
+      .join(' ')
+    const path = `M ${v0x} ${v0y} ${rest} Z`
     // Neighbors aligned to each edge; translate raw neighbor ids via idMap
     const neighbors: number[] = []
     for (let j = 0; j < verts.length; j++) {
