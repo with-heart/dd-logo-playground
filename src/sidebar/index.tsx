@@ -17,8 +17,8 @@ export const Sidebar = () => {
       </header>
 
       <div className="flex flex-col gap-6 overflow-y-auto">
-        <ColorsSection />
         <TilingSection />
+        <ColorsSection />
         <ExportsSection />
       </div>
     </>
