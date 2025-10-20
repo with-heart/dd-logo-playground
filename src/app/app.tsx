@@ -22,7 +22,9 @@ export function App() {
       className="grid h-[100dvh] grid-cols-[4fr_minmax(300px,_1fr)] grid-rows-[auto_1fr_auto] gap-1 bg-zinc-700 p-2 *:bg-zinc-950"
     >
       <header className="px-4 py-2 flex items-center justify-between [grid-area:_header]">
-        <h1 className="font-medium">Developer DAO Logo Playground</h1>
+        <h1 className="font-medium xl:text-xl">
+          Developer DAO Logo Playground
+        </h1>
         <Button size="icon-lg" variant="outline" asChild>
           <a
             href="https://github.com/with-heart/dd-logo-playground"
@@ -40,7 +42,7 @@ export function App() {
       <aside className="flex flex-col overflow-y-hidden [grid-area:_sidebar] *:p-4">
         <Sidebar />
       </aside>
-      <footer className="px-4 py-2 text-center font-pixel text-2xl [grid-area:_footer]">
+      <footer className="px-4 py-2 text-center font-pixel md:text-2xl text-lg [grid-area:_footer]">
         made with heart by{' '}
         <a
           href="https://github.com/with-heart"
