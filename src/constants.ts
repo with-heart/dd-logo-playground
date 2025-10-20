@@ -18,5 +18,5 @@ export const CIRCLE_CENTER_X = 16.29
 export const CIRCLE_CENTER_Y = 16.685
 export const CIRCLE_RADIUS = 16.29
 
-export const HEX_RADIUS = 1.2
-export const TRIANGLE_SIDE = 2.5
+export const GRID_HEX_BASE_RADIUS = 1.2
+export const GRID_TRIANGLE_BASE_SIDE = 2.5

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { HEX_RADIUS, TRIANGLE_SIDE } from '../constants'
+import { GRID_HEX_BASE_RADIUS, GRID_TRIANGLE_BASE_SIDE } from '../constants'
 import { useSettings } from '../use-settings'
 import { buildHexGrid, type HexGrid } from './geometry/build-hex-grid'
 import {
@@ -19,7 +19,7 @@ export const useGeometry = () => {
       return {
         kind: 'triangle',
         grid: buildTriangleGrid({
-          triangleSide: TRIANGLE_SIDE,
+          triangleSide: GRID_TRIANGLE_BASE_SIDE,
         }),
       }
     }
@@ -27,7 +27,7 @@ export const useGeometry = () => {
     return {
       kind: 'hexagon',
       grid: buildHexGrid({
-        hexRadius: HEX_RADIUS,
+        hexRadius: GRID_HEX_BASE_RADIUS,
         vertical: verticalHexagons,
       }),
     }

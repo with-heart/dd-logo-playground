@@ -1,4 +1,4 @@
-import { HEX_RADIUS, TRIANGLE_SIDE } from '@/constants'
+import { GRID_HEX_BASE_RADIUS, GRID_TRIANGLE_BASE_SIDE } from '@/constants'
 import { mulberry32 } from '@/math'
 import type { SettingsProperties } from '@/use-settings'
 import type { ComponentProps } from 'react'
@@ -28,10 +28,10 @@ export const Logo = ({
   const geometry =
     pattern === 'triangle' ?
       buildTriangleGrid({
-        triangleSide: TRIANGLE_SIDE,
+        triangleSide: GRID_TRIANGLE_BASE_SIDE,
       })
     : buildHexGrid({
-        hexRadius: HEX_RADIUS,
+        hexRadius: GRID_HEX_BASE_RADIUS,
         vertical: verticalHexagons,
       })
   const rng = mulberry32(seed || 1)
