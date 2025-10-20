@@ -11,16 +11,11 @@ const vt323 = VT323({
   weight: '400',
 })
 
-// Ensure all metadata URLs are absolute for social crawlers.
-// Prefer NEXT_PUBLIC_SITE_URL; on Vercel, VERCEL_URL is available without protocol.
-const domainFromEnv =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  process.env.VERCEL_URL ||
-  'http://localhost:3000'
-
-const siteUrl = domainFromEnv.startsWith('http')
-  ? domainFromEnv
-  : `https://${domainFromEnv}`
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
