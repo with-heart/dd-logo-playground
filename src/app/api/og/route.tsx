@@ -3,14 +3,9 @@ import { Logo } from '@/logo/server'
 import { randomSeed } from '@/math'
 import { loadSearchParams } from '@/search-params'
 
-const colors = {
-  bg: '#3f3f47',
-  boxes: '#060003',
-}
-
 const logoStyle = {
-  width: '600px',
-  height: '600px',
+  width: '550px',
+  height: '550px',
 }
 
 export async function GET(request: Request) {
@@ -18,18 +13,13 @@ export async function GET(request: Request) {
 
   return new ImageResponse(
     <div
-      style={{ backgroundColor: colors.bg }}
-      tw="flex h-full w-full flex-col items-center p-2"
+      style={{ backgroundColor: '#060003' }}
+      tw="flex h-full w-full flex-col items-center justify-center"
     >
-      <div
-        style={{ backgroundColor: colors.boxes }}
-        tw="flex w-full grow items-center justify-center"
-      >
-        <Logo
-          settings={{ ...settings, seed: settings.seed ?? randomSeed() }}
-          style={logoStyle}
-        />
-      </div>
+      <Logo
+        settings={{ ...settings, seed: settings.seed ?? randomSeed() }}
+        style={logoStyle}
+      />
     </div>,
     {
       width: 1200,
