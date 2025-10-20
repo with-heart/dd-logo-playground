@@ -19,7 +19,7 @@ export function App() {
   return (
     <main
       id="root"
-      className="grid h-screen grid-cols-[4fr_minmax(300px,_1fr)] grid-rows-[auto_1fr_auto] gap-1 bg-zinc-700 p-2 *:bg-zinc-950"
+      className="grid h-[100dvh] grid-cols-[4fr_minmax(300px,_1fr)] grid-rows-[auto_1fr_auto] gap-1 bg-zinc-700 p-2 *:bg-zinc-950"
     >
       <header className="px-4 py-2 flex items-center justify-between [grid-area:_header]">
         <h1 className="font-medium">Developer DAO Logo Playground</h1>
