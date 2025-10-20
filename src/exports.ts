@@ -35,24 +35,69 @@ export const useExport = () => {
     : estimatedBytes != null ? `Estimated size: ${formatBytes(estimatedBytes)}`
     : 'Estimated size: -'
 
-  // Estimate output size when export settings or image change
+  // Observe the current SVG (and reattach if it is replaced) and estimate size
+  // when the image content or export settings change, without reacting to
+  // unrelated DOM changes elsewhere.
   useEffect(() => {
     let cancelled = false
-    const estimate = async () => {
-      if (exportType === 'svg') {
-        const bytes = await estimateImageSize({ type: 'svg' })
-        if (!cancelled) setEstimatedBytes(bytes)
-        return
-      }
-      setEstimating(true)
-      const bytes = await estimateImageSize({ type: 'png', size: exportSize })
-      setEstimating(false)
-      if (!cancelled) setEstimatedBytes(bytes)
+    let timeout: ReturnType<typeof setTimeout> | null = null
+    const schedule = () => {
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(async () => {
+        if (cancelled) return
+        setEstimating(true)
+        if (exportType === 'svg') {
+          const bytes = await estimateImageSize({ type: 'svg' })
+          if (!cancelled) {
+            setEstimatedBytes(bytes)
+            setEstimating(false)
+          }
+          return
+        }
+        const bytes = await estimateImageSize({ type: 'png', size: exportSize })
+        if (!cancelled) {
+          setEstimatedBytes(bytes)
+          setEstimating(false)
+        }
+      }, 150)
     }
 
-    estimate()
+    // Observer for the current #logo element
+    let svgEl: SVGSVGElement | null = null
+    let svgObserver: MutationObserver | null = null
+    const attachToSvg = () => {
+      const el = queryCurrentSVG()
+      if (!el || el === svgEl) return
+      // Detach previous observer if any
+      if (svgObserver) svgObserver.disconnect()
+      svgEl = el
+      svgObserver = new MutationObserver(() => {
+        schedule()
+      })
+      svgObserver.observe(svgEl, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
+      // Estimate immediately upon attaching to a (new) SVG
+      schedule()
+    }
+
+    // Attach to current SVG if present now
+    attachToSvg()
+
+    // Watch for #logo element being replaced/added later
+    const bodyObserver = new MutationObserver(() => {
+      attachToSvg()
+    })
+    bodyObserver.observe(document.body, { childList: true, subtree: true })
+
     return () => {
       cancelled = true
+      if (svgObserver) svgObserver.disconnect()
+      bodyObserver.disconnect()
+      if (timeout) clearTimeout(timeout)
     }
   }, [exportType, exportSize])
 
