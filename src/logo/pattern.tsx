@@ -1,4 +1,3 @@
-import type { ComponentProps } from 'react'
 import type { OklchColor } from './colors/generate-colors'
 
 type Cell = {
@@ -18,7 +17,7 @@ export type PatternProps = {
   strokeWidth: number
   toFill: (c: OklchColor) => string
   deriveStroke: (a: OklchColor, b: OklchColor | null) => string
-} & ComponentProps<'g'>
+}
 
 // Works both as a React component (<Pattern ... />) and as a function call
 // Pattern({...}) which returns an array of elements, which is helpful for
