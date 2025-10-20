@@ -8,6 +8,15 @@
     "header header"
     "image sidebar"
     "footer footer";
+
+  @media (width <= 36rem) {
+    grid-template-areas:
+      "header"
+      "image"
+      "sidebar"
+      "footer";
+    grid-template-columns: 1fr;
+  }
 }
 
 @theme inline {
