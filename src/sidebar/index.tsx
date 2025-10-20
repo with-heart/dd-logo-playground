@@ -10,7 +10,7 @@ export const Sidebar = () => {
 
   return (
     <>
-      <header>
+      <header className="bg-zinc-900 border-b border-zinc-800">
         <Button size="lg" className="w-full" onClick={regenerateImage}>
           <RotateCcwIcon /> Regenerate Image
         </Button>
