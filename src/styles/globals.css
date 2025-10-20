@@ -1,13 +1,13 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 #root {
   grid-template-areas:
-    'header header'
-    'image sidebar'
-    'footer footer';
+    "header header"
+    "image sidebar"
+    "footer footer";
 }
 
 @theme inline {
@@ -127,7 +127,7 @@
   }
 
   button:not(:disabled),
-  [role='button']:not(:disabled) {
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
 }

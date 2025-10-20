@@ -1,7 +1,7 @@
-import { randomSeed } from '@/math'
-import { loadSearchParams } from '@/search-params'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import { randomSeed } from '@/math'
+import { loadSearchParams } from '@/search-params'
 import { App } from './app'
 
 export async function generateMetadata({

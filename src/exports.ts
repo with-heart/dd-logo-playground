@@ -30,10 +30,11 @@ export const useExport = () => {
     }
   }, [exportType, exportSize])
 
-  const estimation =
-    estimating ? 'Estimating...'
-    : estimatedBytes != null ? `Estimated size: ${formatBytes(estimatedBytes)}`
-    : 'Estimated size: -'
+  const estimation = estimating
+    ? 'Estimating...'
+    : estimatedBytes != null
+      ? `Estimated size: ${formatBytes(estimatedBytes)}`
+      : 'Estimated size: -'
 
   // Observe the current SVG (and reattach if it is replaced) and estimate size
   // when the image content or export settings change, without reacting to
@@ -54,7 +55,10 @@ export const useExport = () => {
           }
           return
         }
-        const bytes = await estimateImageSize({ type: 'png', size: exportSize })
+        const bytes = await estimateImageSize({
+          type: 'png',
+          size: exportSize,
+        })
         if (!cancelled) {
           setEstimatedBytes(bytes)
           setEstimating(false)

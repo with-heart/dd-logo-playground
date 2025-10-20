@@ -1,3 +1,5 @@
+import { DicesIcon, DownloadIcon, RotateCcwIcon } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
@@ -9,8 +11,6 @@ import {
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
-import { DicesIcon, DownloadIcon, RotateCcwIcon } from 'lucide-react'
-import type { ReactNode } from 'react'
 import { CompoundSliderGroup } from './components/compound-slider-group'
 import {
   CELL_SIZE_MAX,
@@ -27,7 +27,7 @@ import {
   OUTLINE_WIDTH_STEP,
 } from './constants'
 import { useExport } from './exports'
-import { useSettings, type Pattern } from './use-settings'
+import { type Pattern, useSettings } from './use-settings'
 
 const Section = ({
   children,

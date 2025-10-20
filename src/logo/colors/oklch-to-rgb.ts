@@ -32,7 +32,7 @@ export function oklchToRgb({ l, c, h }: OklchColor): RgbColor {
   const toSrgb = (x: number) => {
     const ax = Math.abs(x)
     if (ax <= 0.0031308) return 12.92 * x
-    return Math.sign(x) * (1.055 * Math.pow(ax, 1 / 2.4) - 0.055)
+    return Math.sign(x) * (1.055 * ax ** (1 / 2.4) - 0.055)
   }
 
   const clamp = (x: number) => Math.min(Math.max(x, 0), 1)

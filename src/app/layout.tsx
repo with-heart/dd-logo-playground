@@ -18,8 +18,9 @@ const domainFromEnv =
   process.env.VERCEL_URL ||
   'http://localhost:3000'
 
-const siteUrl =
-  domainFromEnv.startsWith('http') ? domainFromEnv : `https://${domainFromEnv}`
+const siteUrl = domainFromEnv.startsWith('http')
+  ? domainFromEnv
+  : `https://${domainFromEnv}`
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

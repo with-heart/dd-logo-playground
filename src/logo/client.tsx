@@ -1,6 +1,6 @@
+import type { ComponentProps } from 'react'
 import { Pattern } from '@/logo/pattern'
 import { useGeometry } from '@/logo/use-geometry'
-import type { ComponentProps } from 'react'
 import { useSettings } from '../use-settings'
 import { LogoBase } from './base'
 import { deriveStroke } from './colors/stroke-utils'
