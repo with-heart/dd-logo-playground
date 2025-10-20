@@ -8,6 +8,7 @@ import { oklchToRgb } from './colors/oklch-to-rgb'
 import { deriveStrokeRgb } from './colors/stroke-utils'
 import { buildHexGrid } from './geometry/build-hex-grid'
 import { buildTriangleGrid } from './geometry/build-triangle-grid'
+import { buildVoronoiGrid } from './geometry/build-voronoi'
 import { Pattern } from './pattern'
 
 export const Logo = ({
@@ -31,10 +32,12 @@ export const Logo = ({
       ? buildTriangleGrid({
           triangleSide: GRID_TRIANGLE_BASE_SIDE * cellSize,
         })
-      : buildHexGrid({
-          hexRadius: GRID_HEX_BASE_RADIUS * cellSize,
-          vertical: verticalHexagons,
-        })
+      : pattern === 'voronoi'
+        ? buildVoronoiGrid({ cellSize, seed })
+        : buildHexGrid({
+            hexRadius: GRID_HEX_BASE_RADIUS * cellSize,
+            vertical: verticalHexagons,
+          })
   const rng = mulberry32(seed || 1)
   const colors = generateOklchColors(
     geometry.length,

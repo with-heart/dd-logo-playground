@@ -6,15 +6,23 @@ import {
   buildTriangleGrid,
   type TriangleGrid,
 } from './geometry/build-triangle-grid'
+import { buildVoronoiGrid, type VoronoiGrid } from './geometry/build-voronoi'
 
 export type Geometry =
   | { kind: 'hexagon'; grid: HexGrid }
   | { kind: 'triangle'; grid: TriangleGrid }
+  | { kind: 'voronoi'; grid: VoronoiGrid }
 
 export const useGeometry = () => {
-  const { verticalHexagons, pattern, cellSize } = useSettings()
+  const { verticalHexagons, pattern, cellSize, seed } = useSettings()
 
   return useMemo<Geometry>(() => {
+    if (pattern === 'voronoi') {
+      return {
+        kind: 'voronoi',
+        grid: buildVoronoiGrid({ cellSize, seed }),
+      }
+    }
     if (pattern === 'triangle') {
       return {
         kind: 'triangle',
@@ -31,5 +39,5 @@ export const useGeometry = () => {
         vertical: verticalHexagons,
       }),
     }
-  }, [pattern, verticalHexagons, cellSize])
+  }, [pattern, verticalHexagons, cellSize, seed])
 }

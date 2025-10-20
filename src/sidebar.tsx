@@ -145,6 +145,7 @@ export const Sidebar = () => {
               <SelectContent id="pattern">
                 <SelectItem value="hexagon">Hexagon</SelectItem>
                 <SelectItem value="triangle">Triangle</SelectItem>
+                <SelectItem value="voronoi">Voronoi</SelectItem>
               </SelectContent>
             </Select>
           </div>
