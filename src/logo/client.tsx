@@ -4,12 +4,12 @@ import type { ComponentProps } from 'react'
 import { useSettings } from '../use-settings'
 import { LogoBase } from './base'
 import { deriveStroke } from './colors/stroke-utils'
-import { useHexColors } from './use-hex-colors'
+import { useColors } from './use-colors'
 
 export const Logo = (props: ComponentProps<'svg'>) => {
   const { strokeWidth } = useSettings()
   const geometry = useGeometry()
-  const colors = useHexColors(geometry.grid.cells.length)
+  const colors = useColors(geometry.grid.cells.length)
 
   return (
     <LogoBase {...props}>
