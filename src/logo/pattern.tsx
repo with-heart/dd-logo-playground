@@ -19,27 +19,36 @@ export const Pattern = ({
   toFill,
   deriveStroke,
 }: PatternProps) => {
-  return geometry.map((cell) => {
+  // First pass: fills
+  const fills = geometry.map((cell) => (
+    <path
+      key={`fill-${cell.id}`}
+      d={cell.path}
+      fill={toFill(colors[cell.id])}
+    />
+  ))
+
+  // Second pass: strokes (deduplicated and rendered on top of all fills)
+  const strokes = geometry.flatMap((cell) => {
     const color = colors[cell.id]
     const vCount = cell.vertices.length
-    return (
-      <g key={cell.id}>
-        <path d={cell.path} fill={toFill(color)} />
-        {cell.vertices.map((v, i) => {
-          const next = cell.vertices[(i + 1) % vCount]
-          const nId = cell.neighbors[i]
-          const stroke = deriveStroke(color, nId >= 0 ? colors[nId] : null)
-          return (
-            <path
-              key={`${cell.id}-${i}`}
-              d={`M ${v[0]} ${v[1]} L ${next[0]} ${next[1]}`}
-              stroke={stroke}
-              strokeWidth={strokeWidth}
-              fill="none"
-            />
-          )
-        })}
-      </g>
-    )
+    return cell.vertices.map((v, i) => {
+      const next = cell.vertices[(i + 1) % vCount]
+      const nId = cell.neighbors[i]
+      // Draw border edges, and draw interior edges only once from the lower id cell
+      if (nId >= 0 && cell.id > nId) return null
+      const stroke = deriveStroke(color, nId >= 0 ? colors[nId] : null)
+      return (
+        <path
+          key={`edge-${cell.id}-${i}`}
+          d={`M ${v[0]} ${v[1]} L ${next[0]} ${next[1]}`}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+      )
+    })
   })
+
+  return [...fills, ...strokes]
 }

@@ -73,11 +73,12 @@ export function buildHexGrid({
           cy + hexRadius * Math.sin(angle),
         ])
       }
+      const fmt = (n: number) => Number(n.toFixed(3))
       const path =
-        `M ${vertices[0][0]} ${vertices[0][1]} ` +
+        `M ${fmt(vertices[0][0])} ${fmt(vertices[0][1])} ` +
         vertices
           .slice(1)
-          .map((v) => `L ${v[0]} ${v[1]}`)
+          .map((v) => `L ${fmt(v[0])} ${fmt(v[1])}`)
           .join(' ') +
         ' Z'
 
@@ -94,36 +95,51 @@ export function buildHexGrid({
     }
   }
 
-  // Neighbor offsets (clockwise starting top-right for horizontal orientation logic adapts on vertical?)
-  const getNeighborOffsets = (colIdx: number): Array<[number, number]> => {
-    const isEvenCol = colIdx % 2 === 0
-    return isEvenCol ?
-        [
-          [0, 1],
-          [1, 1],
-          [1, 0],
-          [0, -1],
-          [-1, 0],
-          [-1, 1],
-        ]
-      : [
-          [1, 0],
-          [1, -1],
-          [0, -1],
-          [0, -2],
-          [-1, -1],
-          [-1, 0],
-        ]
+  // Build neighbors by matching shared edges (robust for both orientations)
+  const keyPt = (x: number, y: number) => `${x.toFixed(6)},${y.toFixed(6)}`
+  const keyEdge = (a: [number, number], b: [number, number]) => {
+    const ka = keyPt(a[0], a[1])
+    const kb = keyPt(b[0], b[1])
+    return ka < kb ? `${ka}|${kb}` : `${kb}|${ka}`
   }
 
-  for (const cell of map.values()) {
-    const offsets = getNeighborOffsets(cell.col)
-    cell.neighbors = offsets.map(([dRow, dCol]) => {
-      const key = `${cell.row + dRow},${cell.col + dCol}`
-      const n = map.get(key)
-      return n ? n.id : -1
+  const cells = Array.from(map.values())
+  const edgeToCells = new Map<string, number[]>()
+  cells.forEach((cell) => {
+    const v = cell.vertices
+    const edges: Array<[[number, number], [number, number]]> = [
+      [v[0], v[1]],
+      [v[1], v[2]],
+      [v[2], v[3]],
+      [v[3], v[4]],
+      [v[4], v[5]],
+      [v[5], v[0]],
+    ]
+    edges.forEach((e) => {
+      const k = keyEdge(e[0], e[1])
+      const arr = edgeToCells.get(k)
+      if (!arr) edgeToCells.set(k, [cell.id])
+      else arr.push(cell.id)
     })
-  }
+  })
 
-  return Array.from(map.values())
+  cells.forEach((cell) => {
+    const v = cell.vertices
+    const edges: Array<[[number, number], [number, number]]> = [
+      [v[0], v[1]],
+      [v[1], v[2]],
+      [v[2], v[3]],
+      [v[3], v[4]],
+      [v[4], v[5]],
+      [v[5], v[0]],
+    ]
+    cell.neighbors = edges.map((e) => {
+      const k = keyEdge(e[0], e[1])
+      const arr = edgeToCells.get(k) || []
+      const neighborId = arr.find((cid) => cid !== cell.id)
+      return neighborId != null ? neighborId : -1
+    })
+  })
+
+  return cells
 }

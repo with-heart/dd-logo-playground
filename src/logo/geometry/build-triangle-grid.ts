@@ -23,6 +23,7 @@ export function buildTriangleGrid({
 }: BuildTriangleGridOptions): TriangleGrid {
   const s = triangleSide
   const h = (Math.sqrt(3) / 2) * s
+  const circumradius = s / Math.sqrt(3) // distance from center to a vertex
 
   // Basis vectors for triangular lattice parallelogram
   const ax = s
@@ -45,12 +46,16 @@ export function buildTriangleGrid({
   }
 
   const pushTriangle = (verts: [number, number][]) => {
-    // Do not clip by centroid here; rely on outer SVG clipPath.
+    // Only keep triangles whose centroid is within the circle + margin so
+    // we render just the needed border band but not the entire bounding box.
     const cx = (verts[0][0] + verts[1][0] + verts[2][0]) / 3
     const cy = (verts[0][1] + verts[1][1] + verts[2][1]) / 3
+    const dist = Math.hypot(cx - CIRCLE_CENTER_X, cy - CIRCLE_CENTER_Y)
+    if (dist > CIRCLE_RADIUS + circumradius) return
     const up = verts[0][1] < (verts[1][1] + verts[2][1]) / 2
     const id = cells.length
-    const path = `M ${verts[0][0]} ${verts[0][1]} L ${verts[1][0]} ${verts[1][1]} L ${verts[2][0]} ${verts[2][1]} Z`
+    const fmt = (n: number) => Number(n.toFixed(3))
+    const path = `M ${fmt(verts[0][0])} ${fmt(verts[0][1])} L ${fmt(verts[1][0])} ${fmt(verts[1][1])} L ${fmt(verts[2][0])} ${fmt(verts[2][1])} Z`
     cells.push({
       id,
       row: 0,
