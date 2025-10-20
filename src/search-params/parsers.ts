@@ -12,7 +12,7 @@ export const urlSearchParamsParsers = {
     'hexagon',
     'triangle',
     'voronoi',
-  ] as const).withDefault('hexagon'),
+  ] as const).withDefault('voronoi'),
   chroma: parseAsFloat.withDefault(0.3).withOptions({ history: 'replace' }),
   chromaVariance: parseAsFloat
     .withDefault(0.05)
