@@ -42,7 +42,7 @@ export const Logo = ({
       })
   const rng = mulberry32(seed || 1)
   const colors = generateOklchColors(
-    geometry.cells.length,
+    geometry.length,
     {
       lightness,
       chroma,

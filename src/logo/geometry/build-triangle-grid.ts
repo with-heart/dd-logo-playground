@@ -1,18 +1,14 @@
-export interface TriangleCell {
-  id: number
+import type { Cell, Grid } from './types'
+
+export interface TriangleCell extends Cell {
   row: number
   col: number
   x: number // base midpoint x
   y: number // base midpoint y (for up: base y; for down: base y)
   up: boolean
-  path: string
-  vertices: [number, number][] // length 3, ordered [apex, left, right] for up; [apex(bottom), left, right] for down
-  neighbors: number[] // length 3 in edge order: [edge 0-1 (left), edge 1-2 (base), edge 2-0 (right)]
 }
 
-export interface TriangleGrid {
-  cells: TriangleCell[]
-}
+export type TriangleGrid = Grid<TriangleCell>
 
 export interface BuildTriangleGridOptions {
   centerX: number
@@ -132,5 +128,5 @@ export function buildTriangleGrid({
     })
   })
 
-  return { cells }
+  return cells
 }

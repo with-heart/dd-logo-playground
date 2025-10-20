@@ -1,18 +1,8 @@
 import type { OklchColor } from './colors/generate-colors'
-
-type Cell = {
-  id: number
-  path: string
-  vertices: [number, number][]
-  neighbors: number[]
-}
-
-type AnyGrid = {
-  cells: Cell[]
-}
+import type { Grid } from './geometry/types'
 
 export type PatternProps = {
-  geometry: AnyGrid
+  geometry: Grid
   colors: OklchColor[]
   strokeWidth: number
   toFill: (c: OklchColor) => string
@@ -29,7 +19,7 @@ export const Pattern = ({
   toFill,
   deriveStroke,
 }: PatternProps) => {
-  return geometry.cells.map((cell) => {
+  return geometry.map((cell) => {
     const color = colors[cell.id]
     const vCount = cell.vertices.length
     return (

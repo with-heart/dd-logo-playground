@@ -1,17 +1,13 @@
-export interface HexCell {
-  id: number
+import type { Cell, Grid } from './types'
+
+export interface HexCell extends Cell {
   row: number
   col: number
   cx: number
   cy: number
-  path: string
-  vertices: [number, number][]
-  neighbors: number[] // length 6, -1 when no neighbor
 }
 
-export interface HexGrid {
-  cells: HexCell[]
-}
+export type HexGrid = Grid<HexCell>
 
 export interface BuildGridOptions {
   centerX: number
@@ -131,5 +127,5 @@ export function buildHexGrid({
     })
   }
 
-  return { cells: Array.from(map.values()) }
+  return Array.from(map.values())
 }

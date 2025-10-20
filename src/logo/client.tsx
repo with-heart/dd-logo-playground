@@ -9,7 +9,7 @@ import { useColors } from './use-colors'
 export const Logo = (props: ComponentProps<'svg'>) => {
   const { strokeWidth } = useSettings()
   const geometry = useGeometry()
-  const colors = useColors(geometry.grid.cells.length)
+  const colors = useColors(geometry.grid.length)
 
   return (
     <LogoBase {...props}>
