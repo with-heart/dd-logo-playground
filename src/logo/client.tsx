@@ -17,6 +17,7 @@ export const Logo = (props: ComponentProps<'svg'>) => {
         strokeWidth={strokeWidth}
         toFill={(c) => c.fill}
         deriveStroke={deriveStroke}
+        perCellStroke
       />
     </LogoBase>
   )

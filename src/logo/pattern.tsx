@@ -7,6 +7,12 @@ export type PatternProps = {
   strokeWidth: number
   toFill: (c: OklchColor) => string
   deriveStroke: (a: OklchColor, b: OklchColor | null) => string
+  /**
+   * When true, draw one stroke per cell using the cell's own path instead of
+   * per-edge strokes blended with neighbors. This reduces element count and
+   * can improve performance for dense grids.
+   */
+  perCellStroke?: boolean
 }
 
 // Works both as a React component (<Pattern ... />) and as a function call
@@ -18,6 +24,7 @@ export const Pattern = ({
   strokeWidth,
   toFill,
   deriveStroke,
+  perCellStroke = false,
 }: PatternProps) => {
   // First pass: fills
   const fills = grid.map((cell) => (
@@ -28,7 +35,27 @@ export const Pattern = ({
     />
   ))
 
-  // Second pass: strokes (deduplicated and rendered on top of all fills)
+  // Second pass: strokes (rendered on top of all fills)
+  if (perCellStroke) {
+    const strokes = grid.map((cell) => {
+      const color = colors[cell.id]
+      const stroke = deriveStroke(color, null)
+      return (
+        <path
+          key={`cell-stroke-${cell.id}`}
+          d={cell.path}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          fill="none"
+        />
+      )
+    })
+    return [...fills, ...strokes]
+  }
+
+  // Default: per-edge strokes, deduplicated and rendered on top of all fills
   const strokes = grid.flatMap((cell) => {
     const color = colors[cell.id]
     const vCount = cell.vertices.length
