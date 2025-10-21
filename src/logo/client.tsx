@@ -7,7 +7,7 @@ import { useLogoModel } from './use-logo-model'
 
 export const Logo = (props: ComponentProps<'svg'>) => {
   const { strokeWidth } = useSettings()
-  const { grid, colors } = useLogoModel()
+  const { grid, colors } = useLogoModel({ throttleMs: 50 })
 
   return (
     <LogoBase {...props}>

@@ -29,7 +29,10 @@ export type LogoSnapshot = {
  * - Stale async results are ignored via generation counters.
  * - Initial snapshot is computed synchronously for immediate display, then kept fresh by workers.
  */
-export const useLogoModel = (): LogoSnapshot => {
+export const useLogoModel = (options?: {
+  throttleMs?: number
+}): LogoSnapshot => {
+  const throttleMs = options?.throttleMs ?? 120
   const {
     // Grid deps
     cellSize,
@@ -74,11 +77,34 @@ export const useLogoModel = (): LogoSnapshot => {
   // without forcing the grid effect to depend on color inputs.
   const getColorInput = useEffectEvent(() => colorInput)
 
-  // Effect: when grid deps change, recompute grid, then colors sized to that grid, then commit atomically
+  // (Throttled) grid recompute handled below via scheduleGrid/runGrid
+  // Keep latest grid input and snapshot in refs for throttled runners
+  const gridInputRef = useRef(gridInput)
   useEffect(() => {
-    let cancelled = false
+    gridInputRef.current = gridInput
+  }, [gridInput])
+  const snapshotRef = useRef(snapshot)
+  useEffect(() => {
+    snapshotRef.current = snapshot
+  }, [snapshot])
+
+  // Mounted flag to avoid state updates after unmount
+  const mountedRef = useRef(true)
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
+
+  // Throttle state for grid runs
+  const gridTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const gridPendingRef = useRef(false)
+
+  // Grid runner (effect event) uses latest inputs at call time
+  const runGrid = useEffectEvent(async () => {
     const myGridGen = ++gridGen.current
     gridRecomputing.current = true
+    const currentGridInput = gridInputRef.current
 
     const gridWorker = new Worker(
       new URL('./workers/grid.worker.ts', import.meta.url),
@@ -87,100 +113,139 @@ export const useLogoModel = (): LogoSnapshot => {
     const gridApi = Comlink.wrap<GridWorkerAPI>(gridWorker)
     let colorsWorker: Worker | null = null
 
-    ;(async () => {
-      try {
-        const newGrid = await gridApi.buildGrid(gridInput)
-        if (cancelled || myGridGen !== gridGen.current) return
+    try {
+      const newGrid = await gridApi.buildGrid(currentGridInput)
+      if (myGridGen !== gridGen.current) return
 
-        colorsWorker = new Worker(
-          new URL('./workers/colors.worker.ts', import.meta.url),
-          { type: 'module' },
-        )
-        const colorsApi = Comlink.wrap<ColorsWorkerAPI>(colorsWorker)
-        const myColorGen = ++colorGen.current
-        const colorInput = getColorInput()
-        const newColors = await colorsApi.generateOklchColors(
-          newGrid.length,
-          {
-            chroma: colorInput.chroma,
-            chromaVariance: colorInput.chromaVariance,
-            lightness: colorInput.lightness,
-            lightnessVariance: colorInput.lightnessVariance,
-          },
-          colorInput.seed,
-        )
+      colorsWorker = new Worker(
+        new URL('./workers/colors.worker.ts', import.meta.url),
+        { type: 'module' },
+      )
+      const colorsApi = Comlink.wrap<ColorsWorkerAPI>(colorsWorker)
+      const myColorGen = ++colorGen.current
+      const ci = getColorInput()
+      const newColors = await colorsApi.generateOklchColors(
+        newGrid.length,
+        {
+          chroma: ci.chroma,
+          chromaVariance: ci.chromaVariance,
+          lightness: ci.lightness,
+          lightnessVariance: ci.lightnessVariance,
+        },
+        ci.seed,
+      )
 
-        if (
-          cancelled ||
-          myGridGen !== gridGen.current ||
-          myColorGen !== colorGen.current
-        )
-          return
+      if (myGridGen !== gridGen.current || myColorGen !== colorGen.current)
+        return
 
-        const next = { grid: newGrid, colors: newColors }
-        lastGoodRef.current = next
-        setSnapshot(next)
-      } catch (e) {
-        // Ignore; keep last good snapshot
-        console.error(e)
-      } finally {
-        gridRecomputing.current = false
-        if (colorsWorker) colorsWorker.terminate()
-        gridWorker.terminate()
-      }
-    })()
-
-    return () => {
-      cancelled = true
+      const next = { grid: newGrid, colors: newColors }
+      lastGoodRef.current = next
+      if (mountedRef.current) setSnapshot(next)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      gridRecomputing.current = false
       if (colorsWorker) colorsWorker.terminate()
       gridWorker.terminate()
     }
-    // Only react to grid inputs; colors will be updated by a separate effect if they change independently
-  }, [gridInput, getColorInput])
+  })
 
-  // Effect: when only color deps change, recompute colors for current grid length and commit colors-only
+  const scheduleGrid = useEffectEvent(() => {
+    if (!gridTimerRef.current) {
+      // Leading call
+      runGrid()
+      gridTimerRef.current = setTimeout(() => {
+        gridTimerRef.current = null
+        if (gridPendingRef.current) {
+          gridPendingRef.current = false
+          // Trailing call with latest inputs
+          runGrid()
+        }
+      }, throttleMs)
+    } else {
+      // Within window: note there is a pending trailing run
+      gridPendingRef.current = true
+    }
+  })
+
+  // Effect: when grid deps change, schedule a throttled grid+colors recompute
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scheduleGrid is an Effect Event; do not include it
   useEffect(() => {
-    if (!snapshot?.grid?.length) return
-    // If a grid recompute is in-flight, let the grid effect commit both together
+    scheduleGrid()
+    // Only react to grid inputs; colors will be updated inside the throttled runner
+  }, [gridInput])
+
+  // (Throttled) color-only recompute handled below via scheduleColors/runColors
+  // Throttle state for color-only runs
+  const colorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const colorPendingRef = useRef(false)
+
+  const runColors = useEffectEvent(async () => {
+    const snap = snapshotRef.current
+    if (!snap?.grid?.length) return
     if (gridRecomputing.current) return
 
-    let cancelled = false
     const myColorGen = ++colorGen.current
     const colorsWorker = new Worker(
       new URL('./workers/colors.worker.ts', import.meta.url),
       { type: 'module' },
     )
     const colorsApi = Comlink.wrap<ColorsWorkerAPI>(colorsWorker)
-
-    ;(async () => {
-      try {
-        const newColors = await colorsApi.generateOklchColors(
-          snapshot.grid.length,
-          {
-            chroma: colorInput.chroma,
-            chromaVariance: colorInput.chromaVariance,
-            lightness: colorInput.lightness,
-            lightnessVariance: colorInput.lightnessVariance,
-          },
-          colorInput.seed,
-        )
-        if (cancelled || myColorGen !== colorGen.current) return
-        const next = { grid: snapshot.grid, colors: newColors }
-        lastGoodRef.current = next
-        setSnapshot(next)
-      } catch (e) {
-        // Ignore; keep last good snapshot
-        console.error(e)
-      } finally {
-        colorsWorker.terminate()
-      }
-    })()
-
-    return () => {
-      cancelled = true
+    try {
+      const ci = getColorInput()
+      const newColors = await colorsApi.generateOklchColors(
+        snap.grid.length,
+        {
+          chroma: ci.chroma,
+          chromaVariance: ci.chromaVariance,
+          lightness: ci.lightness,
+          lightnessVariance: ci.lightnessVariance,
+        },
+        ci.seed,
+      )
+      if (myColorGen !== colorGen.current) return
+      const next = { grid: snap.grid, colors: newColors }
+      lastGoodRef.current = next
+      if (mountedRef.current) setSnapshot(next)
+    } catch (e) {
+      console.error(e)
+    } finally {
       colorsWorker.terminate()
     }
+  })
+
+  const scheduleColors = useEffectEvent(() => {
+    if (!snapshotRef.current?.grid?.length) return
+    if (gridRecomputing.current) return
+    if (!colorTimerRef.current) {
+      // Leading call
+      runColors()
+      colorTimerRef.current = setTimeout(() => {
+        colorTimerRef.current = null
+        if (colorPendingRef.current) {
+          colorPendingRef.current = false
+          // Trailing call
+          runColors()
+        }
+      }, throttleMs)
+    } else {
+      colorPendingRef.current = true
+    }
+  })
+
+  // Effect: when only color deps change (and a grid run is not in-flight), schedule throttled colors-only recompute
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scheduleColors is an Effect Event; do not include it
+  useEffect(() => {
+    scheduleColors()
   }, [colorInput, snapshot?.grid])
+
+  // Global cleanup: clear any pending timers on unmount
+  useEffect(() => {
+    return () => {
+      if (gridTimerRef.current) clearTimeout(gridTimerRef.current)
+      if (colorTimerRef.current) clearTimeout(colorTimerRef.current)
+    }
+  }, [])
 
   // Always provide the best-known consistent snapshot
   return snapshot ?? lastGoodRef.current
