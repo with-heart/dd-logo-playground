@@ -18,7 +18,7 @@ export const CIRCLE_CENTER_X = 16.29
 export const CIRCLE_CENTER_Y = 16.685
 export const CIRCLE_RADIUS = 16.29
 
-export const CELL_SIZE_MIN = 0.25
+export const CELL_SIZE_MIN = 0.2
 export const CELL_SIZE_MAX = 2
 export const CELL_SIZE_STEP = 0.05
 
