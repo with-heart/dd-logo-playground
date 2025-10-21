@@ -1,8 +1,8 @@
 import type { OklchColor } from './colors/generate-colors'
-import type { Grid } from './geometry/types'
+import type { Grid } from './grids/types'
 
 export type PatternProps = {
-  geometry: Grid
+  grid: Grid
   colors: OklchColor[]
   strokeWidth: number
   toFill: (c: OklchColor) => string
@@ -13,14 +13,14 @@ export type PatternProps = {
 // Pattern({...}) which returns an array of elements, which is helpful for
 // satori-based server rendering.
 export const Pattern = ({
-  geometry,
+  grid,
   colors,
   strokeWidth,
   toFill,
   deriveStroke,
 }: PatternProps) => {
   // First pass: fills
-  const fills = geometry.map((cell) => (
+  const fills = grid.map((cell) => (
     <path
       key={`fill-${cell.id}`}
       d={cell.path}
@@ -29,7 +29,7 @@ export const Pattern = ({
   ))
 
   // Second pass: strokes (deduplicated and rendered on top of all fills)
-  const strokes = geometry.flatMap((cell) => {
+  const strokes = grid.flatMap((cell) => {
     const color = colors[cell.id]
     const vCount = cell.vertices.length
     return cell.vertices.map((v, i) => {
