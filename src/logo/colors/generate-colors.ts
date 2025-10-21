@@ -1,5 +1,5 @@
-import { clamp } from '../../math'
-import type { ColorValues } from '../../types'
+import { clamp, mulberry32 } from '@/math'
+import type { ColorValues } from '@/types'
 
 export interface OklchColor {
   l: number
@@ -11,10 +11,11 @@ export interface OklchColor {
 export function generateOklchColors(
   count: number,
   base: ColorValues,
-  rng: () => number = Math.random,
+  seed: number,
 ): OklchColor[] {
   const { lightness, chroma, lightnessVariance, chromaVariance } = base
   const arr: OklchColor[] = []
+  const rng = mulberry32(seed)
   for (let i = 0; i < count; i++) {
     const lRand = clamp(lightness + (rng() * 2 - 1) * lightnessVariance, 0, 1)
     const cRand = clamp(chroma + (rng() * 2 - 1) * chromaVariance, 0, 0.45)

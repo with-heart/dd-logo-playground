@@ -1,5 +1,4 @@
 import type { ComponentProps } from 'react'
-import { mulberry32 } from '@/math'
 import type { SettingsProperties } from '@/use-settings'
 import { LogoBase } from './base'
 import { generateOklchColors } from './colors/generate-colors'
@@ -30,7 +29,6 @@ export const Logo = ({
     seed,
     verticalHexagons,
   })
-  const rng = mulberry32(seed || 1)
   const colors = generateOklchColors(
     grid.length,
     {
@@ -39,7 +37,7 @@ export const Logo = ({
       lightnessVariance,
       chromaVariance,
     },
-    rng,
+    seed,
   )
 
   return (

@@ -1,15 +1,13 @@
 import type { ComponentProps } from 'react'
 import { Pattern } from '@/logo/pattern'
-import { useGrid } from '@/logo/use-grid'
 import { useSettings } from '../use-settings'
 import { LogoBase } from './base'
 import { deriveStroke } from './colors/stroke-utils'
-import { useColors } from './use-colors'
+import { useLogoModel } from './use-logo-model'
 
 export const Logo = (props: ComponentProps<'svg'>) => {
   const { strokeWidth } = useSettings()
-  const grid = useGrid()
-  const colors = useColors(grid.length)
+  const { grid, colors } = useLogoModel()
 
   return (
     <LogoBase {...props}>
