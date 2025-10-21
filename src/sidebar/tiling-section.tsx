@@ -1,3 +1,4 @@
+import { Fieldset } from '@/components/fieldset'
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -59,35 +60,37 @@ export const TilingSection = () => {
         </div>
       )}
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-baseline justify-between">
-          <Label id="cell-size-label">Cell Size</Label>
-          <span className="text-xs">{cellSize.toFixed(2)}x</span>
+      <Fieldset legend="Cells">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-baseline justify-between">
+            <Label id="cell-size-label">Size</Label>
+            <span className="text-xs">{cellSize.toFixed(2)}x</span>
+          </div>
+          <Slider
+            aria-labelledby="cell-size-label"
+            value={[cellSize]}
+            onValueChange={(value) => setCellSize(value[0])}
+            min={CELL_SIZE_MIN}
+            max={CELL_SIZE_MAX}
+            step={CELL_SIZE_STEP}
+          />
         </div>
-        <Slider
-          aria-labelledby="cell-size-label"
-          value={[cellSize]}
-          onValueChange={(value) => setCellSize(value[0])}
-          min={CELL_SIZE_MIN}
-          max={CELL_SIZE_MAX}
-          step={CELL_SIZE_STEP}
-        />
-      </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-baseline justify-between">
-          <Label id="stroke-width-label">Outline Width</Label>
-          <span className="text-xs">{strokeWidth}</span>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-baseline justify-between">
+            <Label id="stroke-width-label">Stroke Width</Label>
+            <span className="text-xs">{strokeWidth}</span>
+          </div>
+          <Slider
+            aria-labelledby="stroke-width-label"
+            value={[strokeWidth]}
+            onValueChange={(value) => setStrokeWidth(value[0])}
+            min={OUTLINE_WIDTH_MIN}
+            max={OUTLINE_WIDTH_MAX}
+            step={OUTLINE_WIDTH_STEP}
+          />
         </div>
-        <Slider
-          aria-labelledby="stroke-width-label"
-          value={[strokeWidth]}
-          onValueChange={(value) => setStrokeWidth(value[0])}
-          min={OUTLINE_WIDTH_MIN}
-          max={OUTLINE_WIDTH_MAX}
-          step={OUTLINE_WIDTH_STEP}
-        />
-      </div>
+      </Fieldset>
     </Section>
   )
 }
