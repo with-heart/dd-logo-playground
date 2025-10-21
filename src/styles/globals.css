@@ -9,7 +9,7 @@
     "image sidebar"
     "footer footer";
 
-  @media (width <= 36rem) {
+  @media (width <= 40rem) {
     grid-template-areas:
       "header"
       "image"
