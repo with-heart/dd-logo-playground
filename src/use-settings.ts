@@ -1,4 +1,18 @@
 import { useCallback, useMemo } from 'react'
+import {
+  CELL_SIZE_MAX,
+  CELL_SIZE_MIN,
+  CHROMA_MAX,
+  CHROMA_MIN,
+  CHROMA_VARIANCE_MAX,
+  CHROMA_VARIANCE_MIN,
+  LIGHTNESS_MAX,
+  LIGHTNESS_MIN,
+  LIGHTNESS_VARIANCE_MAX,
+  LIGHTNESS_VARIANCE_MIN,
+  OUTLINE_WIDTH_MAX,
+  OUTLINE_WIDTH_MIN,
+} from './constants'
 import { clamp, rand, randomSeed } from './math'
 import { useSearchParams } from './search-params'
 
@@ -37,23 +51,39 @@ export type UrlSettings = SettingsProperties & SettingsActions
 export const useSettings = (): UrlSettings => {
   const [query, setQuery] = useSearchParams()
 
-  const chroma = clamp(query.chroma, 0, 0.45)
-  const chromaVariance = clamp(query.chromaVariance, 0, 0.45)
-  const lightness = clamp(query.lightness, 0, 1)
-  const lightnessVariance = clamp(query.lightnessVariance, 0, 1)
-  const strokeWidth = clamp(query.strokeWidth ?? 0.05, 0, 10)
-  const cellSize = clamp(query.cellSize ?? 1, 0.25, 2)
+  const chroma = clamp(query.chroma, CHROMA_MIN, CHROMA_MAX)
+  const chromaVariance = clamp(
+    query.chromaVariance,
+    CHROMA_VARIANCE_MIN,
+    CHROMA_VARIANCE_MAX,
+  )
+  const lightness = clamp(query.lightness, LIGHTNESS_MIN, LIGHTNESS_MAX)
+  const lightnessVariance = clamp(
+    query.lightnessVariance,
+    LIGHTNESS_VARIANCE_MIN,
+    LIGHTNESS_VARIANCE_MAX,
+  )
+  const strokeWidth = clamp(
+    query.strokeWidth,
+    OUTLINE_WIDTH_MIN,
+    OUTLINE_WIDTH_MAX,
+  )
+  const cellSize = clamp(query.cellSize, CELL_SIZE_MIN, CELL_SIZE_MAX)
 
   const randomizeChroma = useCallback(() => {
     setQuery({
-      chroma: Number(rand(0, 0.4).toFixed(2)),
-      chromaVariance: Number(rand(0, 0.4).toFixed(2)),
+      chroma: Number(rand(CHROMA_MIN, CHROMA_MAX).toFixed(2)),
+      chromaVariance: Number(
+        rand(CHROMA_VARIANCE_MIN, CHROMA_VARIANCE_MAX).toFixed(2),
+      ),
     })
   }, [setQuery])
   const randomizeLightness = useCallback(() => {
     setQuery({
-      lightness: Number(rand(0, 1).toFixed(2)),
-      lightnessVariance: Number(rand(0, 1).toFixed(2)),
+      lightness: Number(rand(LIGHTNESS_MIN, LIGHTNESS_MAX).toFixed(2)),
+      lightnessVariance: Number(
+        rand(LIGHTNESS_VARIANCE_MIN, LIGHTNESS_VARIANCE_MAX).toFixed(2),
+      ),
     })
   }, [setQuery])
 
