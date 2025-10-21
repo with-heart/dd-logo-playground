@@ -100,13 +100,14 @@ export const useLogoModel = (): LogoSnapshot => {
       { type: 'module' },
     )
     const gridApi = Comlink.wrap<GridWorkerAPI>(gridWorker)
+    let colorsWorker: Worker | null = null
 
     ;(async () => {
       try {
         const newGrid = await gridApi.buildGrid(gridInput)
         if (cancelled || myGridGen !== gridGen.current) return
 
-        const colorsWorker = new Worker(
+        colorsWorker = new Worker(
           new URL('./workers/colors.worker.ts', import.meta.url),
           { type: 'module' },
         )
@@ -123,7 +124,6 @@ export const useLogoModel = (): LogoSnapshot => {
           },
           colorInput.seed,
         )
-        colorsWorker.terminate()
 
         if (
           cancelled ||
@@ -140,12 +140,14 @@ export const useLogoModel = (): LogoSnapshot => {
         console.error(e)
       } finally {
         gridRecomputing.current = false
+        if (colorsWorker) colorsWorker.terminate()
         gridWorker.terminate()
       }
     })()
 
     return () => {
       cancelled = true
+      if (colorsWorker) colorsWorker.terminate()
       gridWorker.terminate()
     }
     // Only react to grid inputs; colors will be updated by a separate effect if they change independently
