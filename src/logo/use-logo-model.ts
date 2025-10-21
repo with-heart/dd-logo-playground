@@ -1,5 +1,5 @@
 import * as Comlink from 'comlink'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react'
 import { useSettings } from '../use-settings'
 import { generateOklchColors, type OklchColor } from './colors/generate-colors'
 import { buildGrid } from './grids/build-grid'
@@ -70,13 +70,9 @@ export const useLogoModel = (): LogoSnapshot => {
     () => ({ chroma, chromaVariance, lightness, lightnessVariance, seed }),
     [chroma, chromaVariance, lightness, lightnessVariance, seed],
   )
-
-  // Keep latest color base values in a ref so grid effect can pick up latest
-  // values without depending on them (avoids unnecessary grid recomputes)
-  const colorInputRef = useRef(colorInput)
-  useEffect(() => {
-    colorInputRef.current = colorInput
-  }, [colorInput])
+  // Provide a stable event function that always reads the latest colorInput
+  // without forcing the grid effect to depend on color inputs.
+  const getColorInput = useEffectEvent(() => colorInput)
 
   // Effect: when grid deps change, recompute grid, then colors sized to that grid, then commit atomically
   useEffect(() => {
@@ -102,7 +98,7 @@ export const useLogoModel = (): LogoSnapshot => {
         )
         const colorsApi = Comlink.wrap<ColorsWorkerAPI>(colorsWorker)
         const myColorGen = ++colorGen.current
-        const colorInput = colorInputRef.current
+        const colorInput = getColorInput()
         const newColors = await colorsApi.generateOklchColors(
           newGrid.length,
           {
@@ -140,7 +136,7 @@ export const useLogoModel = (): LogoSnapshot => {
       gridWorker.terminate()
     }
     // Only react to grid inputs; colors will be updated by a separate effect if they change independently
-  }, [gridInput])
+  }, [gridInput, getColorInput])
 
   // Effect: when only color deps change, recompute colors for current grid length and commit colors-only
   useEffect(() => {
