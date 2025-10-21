@@ -1,6 +1,6 @@
 import { DicesIcon } from 'lucide-react'
-import { CompoundSliderGroup } from '@/components/compound-slider-group'
 import { Button } from '@/components/ui/button'
+import { VarianceSliderGroup } from '@/components/variance-slider-group'
 import {
   CHROMA_MAX,
   CHROMA_MIN,
@@ -29,7 +29,7 @@ export const ColorsSection = () => {
 
   return (
     <Section title="Colors">
-      <CompoundSliderGroup
+      <VarianceSliderGroup
         name="Lightness"
         baseValue={lightness}
         onBaseChange={setLightness}
@@ -47,9 +47,9 @@ export const ColorsSection = () => {
         >
           <DicesIcon />
         </Button>
-      </CompoundSliderGroup>
+      </VarianceSliderGroup>
 
-      <CompoundSliderGroup
+      <VarianceSliderGroup
         name="Chroma"
         baseValue={chroma}
         onBaseChange={setChroma}
@@ -67,7 +67,7 @@ export const ColorsSection = () => {
         >
           <DicesIcon />
         </Button>
-      </CompoundSliderGroup>
+      </VarianceSliderGroup>
 
       <Button size="sm" variant="outline" onClick={randomizeColors}>
         <DicesIcon /> Randomize Lightness & Chroma
