@@ -43,8 +43,9 @@ export const useLogoModel = (): LogoSnapshot => {
     lightnessVariance,
   } = useSettings()
 
-  // Build an initial, consistent snapshot synchronously so UI can render immediately
-  const initialSnapshot = useMemo<LogoSnapshot>(() => {
+  // Build an initial, consistent snapshot synchronously ONCE so UI can render immediately.
+  // Subsequent updates are handled via workers; this avoids re-doing heavy sync work on every change.
+  const [snapshot, setSnapshot] = useState<LogoSnapshot>(() => {
     const grid = buildGrid({ cellSize, pattern, seed, verticalHexagons })
     const colors = generateOklchColors(
       grid.length,
@@ -52,20 +53,8 @@ export const useLogoModel = (): LogoSnapshot => {
       seed,
     )
     return { grid, colors }
-    // Intentionally include all inputs: this only seeds initial state; workers will take over updates.
-  }, [
-    cellSize,
-    pattern,
-    seed,
-    verticalHexagons,
-    chroma,
-    chromaVariance,
-    lightness,
-    lightnessVariance,
-  ])
-
-  const [snapshot, setSnapshot] = useState<LogoSnapshot>(initialSnapshot)
-  const lastGoodRef = useRef<LogoSnapshot>(initialSnapshot)
+  })
+  const lastGoodRef = useRef<LogoSnapshot>(snapshot)
 
   // Generations to drop stale async results
   const gridGen = useRef(0)
